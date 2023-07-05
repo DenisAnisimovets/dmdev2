@@ -1,4 +1,4 @@
-package entity;
+package com.danis.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,12 +15,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "users", schema = "public")
+@Table(name = "users")
 @EqualsAndHashCode(exclude = "id")
 public class User {
     @Id
@@ -29,6 +30,7 @@ public class User {
 
     @Column(unique = true)
     private String username;
+    private String password;
     private String firstname;
     private String lastname;
     private LocalDate birth_date;

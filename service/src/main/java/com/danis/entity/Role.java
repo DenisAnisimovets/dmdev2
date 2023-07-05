@@ -1,4 +1,4 @@
-package entity;
+package com.danis.entity;
 
 public enum Role {
     ADMIN,

@@ -1,4 +1,4 @@
-package entity;
+package com.danis.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,21 +11,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "orders", schema = "public")
+@Table(name = "orders")
 @EqualsAndHashCode(exclude = "id")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate creation_date;
-    private Long user_Id;
+    private LocalDateTime creation_date;
+    private Long userId;
     private Long value;
 
 }
