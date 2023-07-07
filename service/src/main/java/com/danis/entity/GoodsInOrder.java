@@ -17,15 +17,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(name = "orders")
 @EqualsAndHashCode(exclude = "id")
-public class Order {
+@Entity
+@Table(name = "goodsinorder")
+public class GoodsInOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long orderId;
+    private Long goodId;
+    private Integer quantity;
+    private Integer price;
     private LocalDateTime creation_date;
-    private Long userId;
-    private Long sum;
-
 }
