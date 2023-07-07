@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import util.HibernateUtil;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +30,7 @@ class OrderTest {
             Order order = Order.builder()
                     .creation_date(LocalDateTime.of(2023, 1, 1, 15, 0, 0))
                     .userId(1L)
-                    .value(100L)
+                    .sum(100L)
                     .build();
             session.save(order);
             session.getTransaction().commit();
@@ -51,9 +50,9 @@ class OrderTest {
             session0.getTransaction().commit();
         }
         Order expectedOrder = Order.builder()
-                .creation_date(LocalDateTime.of(2023, 1, 1, 15,0,0))
+                .creation_date(LocalDateTime.of(2023, 1, 1, 15, 0, 0))
                 .userId(user.getId())
-                .value(100L)
+                .sum(100L)
                 .build();
 
         try (Session session1 = sessionFactory.openSession()) {

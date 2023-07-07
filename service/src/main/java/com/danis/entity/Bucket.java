@@ -10,22 +10,23 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
 @Entity
-@Table(name = "orders")
+@Builder
 @EqualsAndHashCode(exclude = "id")
-public class Order {
+public class Bucket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime creation_date;
     private Long userId;
-    private Long sum;
-
+    private Long orderId;
+    private Long goodId;
+    private Integer quantity;
+    private Integer price;
+    private LocalDateTime creation_date ;
 }
