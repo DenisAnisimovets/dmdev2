@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class UserTest {
+class GoodTest {
     private static SessionFactory sessionFactory = null;
 
     @BeforeAll
@@ -25,62 +25,62 @@ class UserTest {
     }
 
     @Test
-    void InsertUser() {
+    void InsertGood() {
         try (Session session = sessionFactory.openSession();) {
-            User user = EntityTestUtil.createUser("User for test");
             session.beginTransaction();
-
-            session.save(user);
-            assertNotNull(user.getId());
+            Good good = EntityTestUtil.createGood("Good for test");
+            session.save(good);
+            assertNotNull(good.getId());
             session.getTransaction().rollback();
         }
     }
 
     @Test
-    void readUser() {
-        User expectedUser = EntityTestUtil.createUser("User for test");
+    void readGood() {
+        Good expectedGood = EntityTestUtil.createGood("Good for test");
 
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            session.save(expectedUser);
+            session.save(expectedGood);
             session.clear();
-            User actualUser = session.get(User.class, expectedUser.getId());
-            assertThat(expectedUser.equals(actualUser));
+            Good actualGood = session.get(Good.class, expectedGood.getId());
+            assertThat(expectedGood.equals(actualGood));
             session.getTransaction().rollback();
         }
     }
 
     @Test
-    void updateUser() {
+    void updateGood() {
         try (Session session = sessionFactory.openSession();) {
             session.beginTransaction();
-            User user = EntityTestUtil.createUser("User for test");
-            session.save(user);
+            Good good = EntityTestUtil.createGood("Good for test");
+            session.save(good);
+            ;
 
-            user.setUsername("User after test");
+            good.setGoodName("Good after test");
             session.flush();
             session.clear();
 
-            User actualUser = session.get(User.class, user.getId());
-            assertEquals("User after test", actualUser.getUsername());
+            Good actualGood = session.get(Good.class, good.getId());
+            assertEquals("Good after test", actualGood.getGoodName());
             session.getTransaction().rollback();
         }
     }
 
     @Test
-    void deleteUser() {
+    void deleteGood() {
         try (Session session = sessionFactory.openSession();) {
             session.beginTransaction();
-            User actualUser = EntityTestUtil.createUser("User for test");
-            session.save(actualUser);
+            Good actualGood = EntityTestUtil.createGood("Good for test");
+            session.save(actualGood);
 
 
-            session.delete(actualUser);
+            session.delete(actualGood);
             session.flush();
             session.clear();
 
-            User expectedUser = session.get(User.class, actualUser.getId());
-            Assertions.assertNull(expectedUser);
+            Good expectedGood = session.get(Good.class, actualGood.getId());
+            Assertions.assertNull(expectedGood);
             session.getTransaction().rollback();
         }
     }

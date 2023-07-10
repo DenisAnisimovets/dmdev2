@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
@@ -19,13 +20,15 @@ import java.time.LocalDateTime;
 @Builder
 @EqualsAndHashCode(exclude = "id")
 @Entity
-@Table(name = "goodsinorder")
-public class GoodsInOrder {
+@Table(name = "goodinorder")
+public class GoodInOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long orderId;
-    private Long goodId;
+    @ManyToOne
+    private Order order;
+    @ManyToOne
+    private Good good;
     private Integer quantity;
     private Integer price;
     private LocalDateTime creation_date;

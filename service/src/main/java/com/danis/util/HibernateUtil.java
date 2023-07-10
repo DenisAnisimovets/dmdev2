@@ -1,8 +1,8 @@
-package util;
+package com.danis.util;
 
-import com.danis.entity.Bucket;
+import com.danis.entity.GoodInBucket;
 import com.danis.entity.Good;
-import com.danis.entity.GoodsInOrder;
+import com.danis.entity.GoodInOrder;
 import com.danis.entity.Order;
 import com.danis.entity.User;
 import lombok.experimental.UtilityClass;
@@ -14,15 +14,20 @@ import org.hibernate.cfg.Configuration;
 public class HibernateUtil {
 
     public static SessionFactory buildSessionFactory() {
+        Configuration configuration = buildConfiguration();
+        configuration.configure();
+
+        return configuration.buildSessionFactory();
+    }
+
+    public static Configuration buildConfiguration() {
         Configuration configuration = new Configuration();
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(Order.class);
         configuration.addAnnotatedClass(Good.class);
-        configuration.addAnnotatedClass(GoodsInOrder.class);
-        configuration.addAnnotatedClass(Bucket.class);
-        configuration.configure();
-
-        return configuration.buildSessionFactory();
+        configuration.addAnnotatedClass(GoodInOrder.class);
+        configuration.addAnnotatedClass(GoodInBucket.class);
+        return configuration;
     }
 }
