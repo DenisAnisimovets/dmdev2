@@ -1,6 +1,5 @@
 package com.danis.entity;
 
-import jdk.dynalink.linker.LinkerServices;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
