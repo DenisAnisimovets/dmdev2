@@ -1,78 +1,118 @@
 package com.danis.entity;
 
+import com.danis.util.EntityTestUtil;
+import com.danis.util.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import util.HibernateUtil;
-
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class OrderTest {
-    private static SessionFactory sessionFactory = null;
+    private static SessionFactory sessionFactory;
 
     @BeforeAll
     static void beforeTests() {
-        try {
-            sessionFactory = HibernateUtil.buildSessionFactory();
-        } finally {
-        }
+        sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
     @Test
     void insertOrder() {
         try (Session session = sessionFactory.openSession()) {
+            User user = EntityTestUtil.createUser("UserForOrder");
             session.beginTransaction();
-            Order order = Order.builder()
-                    .creation_date(LocalDateTime.of(2023, 1, 1, 15, 0, 0))
-                    .userId(1L)
-                    .sum(100L)
-                    .build();
+            session.save(user);
+            Order order = EntityTestUtil.createOrder(user);
             session.save(order);
-            session.getTransaction().commit();
-            Assertions.assertNotNull(order.getId());
+            assertNotNull(order.getId());
+            session.getTransaction().rollback();
         }
     }
 
     @Test
     void readOrder() {
-        User user = User.builder()
-                .username("User3")
-                .build();
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            User user = EntityTestUtil.createUser("UserForOrder");
+            session.save(user);
 
-        try (Session session0 = sessionFactory.openSession()) {
-            session0.beginTransaction();
-            session0.save(user);
-            session0.getTransaction().commit();
+            Order expectedOrder = EntityTestUtil.createOrder(user);
+
+            session.save(expectedOrder);
+            session.clear();
+            Order actualOrder = session.get(Order.class, expectedOrder.getId());
+            assertThat(actualOrder).isEqualTo(expectedOrder);
+            session.getTransaction().rollback();
         }
-        Order expectedOrder = Order.builder()
-                .creation_date(LocalDateTime.of(2023, 1, 1, 15, 0, 0))
-                .userId(user.getId())
-                .sum(100L)
-                .build();
+    }
 
-        try (Session session1 = sessionFactory.openSession()) {
-            session1.beginTransaction();
-            session1.save(expectedOrder);
-            session1.getTransaction().commit();
+    @Test
+    void updateOrder() {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            User user = EntityTestUtil.createUser("UserForOrder");
+            session.save(user);
+
+            Order expectedOrder = EntityTestUtil.createOrder(user);
+
+            session.save(expectedOrder);
+            Long expectedSum = Long.valueOf(100000);
+            expectedOrder.setSum(expectedSum);
+            session.flush();
+            session.clear();
+
+            Order actualOrder = session.get(Order.class, expectedOrder.getId());
+            assertThat(actualOrder.getSum()).isEqualTo(expectedSum);
+            session.getTransaction().rollback();
         }
+    }
 
-        try (Session session2 = sessionFactory.openSession()) {
-            session2.beginTransaction();
-            Order actualOrder = session2.get(Order.class, expectedOrder.getId());
-            assertThat(expectedOrder.equals(actualOrder));
+    @Test
+    void deleteOrder() {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            User user = EntityTestUtil.createUser("UserForOrder");
+            session.save(user);
+
+            Order order = EntityTestUtil.createOrder(user);
+
+            session.save(order);
+
+            session.delete(order);
+            session.flush();
+            session.clear();
+            Order actualOrder = session.get(Order.class, order.getId());
+            assertNull(actualOrder);
+            session.getTransaction().rollback();
+        }
+    }
+
+    @Test
+    void addGoodInOrderByCascade() {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            User user = EntityTestUtil.createUser("UserForOrder");
+            session.save(user);
+            Order expectedOrder = EntityTestUtil.createOrder(user);
+            session.save(expectedOrder);
+            Good good = EntityTestUtil.createGood("First good");
+            session.save(good);
+
+            GoodInOrder goodInOrder = EntityTestUtil.createGoodInOrder(good, expectedOrder);
+            expectedOrder.getGoodsInOrder().add(goodInOrder);
+            session.flush();
+
+            assertNotNull(goodInOrder.getId());
+            session.getTransaction().rollback();
         }
     }
 
     @AfterAll
     static void afterTests() {
-        try {
-            sessionFactory.close();
-        } finally {
-        }
+        sessionFactory.close();
     }
 }

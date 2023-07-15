@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +24,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "users")
 @EqualsAndHashCode(exclude = "id")
+@ToString(exclude = "id")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

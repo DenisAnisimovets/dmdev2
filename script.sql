@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS bucket;
-DROP TABLE IF EXISTS goodsInOrder;
+DROP TABLE IF EXISTS good_in_bucket;
+DROP TABLE IF EXISTS good_in_order;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS good;
 DROP TABLE IF EXISTS users;
@@ -33,7 +33,7 @@ CREATE TABLE orders
     creation_date TIMESTAMP
 );
 
-CREATE TABLE goodsInOrder
+CREATE TABLE good_in_order
 (
     id BIGSERIAL PRIMARY KEY ,
     order_id BIGINT REFERENCES orders(id) ,
@@ -44,14 +44,13 @@ CREATE TABLE goodsInOrder
     UNIQUE (order_Id, good_Id)
 );
 
-CREATE TABLE bucket
+CREATE TABLE good_in_bucket
 (
     id BIGSERIAL PRIMARY KEY ,
     user_Id BIGINT REFERENCES users(id) ,
-    order_Id BIGINT REFERENCES orders(id) ,
-    good_Id BIGINT REFERENCES good(id),
+    good_Id BIGINT REFERENCES good(id) ,
     quantity INTEGER ,
     price INTEGER ,
     creation_date TIMESTAMP,
-    UNIQUE (user_id, order_Id, good_Id)
+    UNIQUE (user_id, good_Id)
 );
