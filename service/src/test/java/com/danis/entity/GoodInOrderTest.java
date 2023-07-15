@@ -5,22 +5,19 @@ import com.danis.util.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class GoodInOrderTest {
-    private static SessionFactory sessionFactory = null;
-
+    private static SessionFactory sessionFactory;
 
     @BeforeAll
     static void beforeTests() {
-        try {
-            sessionFactory = HibernateTestUtil.buildSessionFactory();
-        } finally {
-        }
+        sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
     @Test
@@ -37,7 +34,7 @@ class GoodInOrderTest {
 
             session.save(goodInOrder);
 
-            Assertions.assertNotNull(goodInOrder.getId());
+            assertNotNull(goodInOrder.getId());
 
             session.getTransaction().rollback();
         }
@@ -45,7 +42,6 @@ class GoodInOrderTest {
 
     @Test
     void readGoodInOrder() {
-
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             User user = EntityTestUtil.createUser("UserForGoodInOrder");
@@ -60,7 +56,7 @@ class GoodInOrderTest {
             session.clear();
 
             GoodInOrder actualGoodInOrder = session.get(GoodInOrder.class, expectedGoodInOrder.getId());
-            assertThat(expectedGoodInOrder.equals(actualGoodInOrder));
+            assertThat(actualGoodInOrder).isEqualTo(actualGoodInOrder);
 
             session.getTransaction().rollback();
         }
@@ -68,7 +64,6 @@ class GoodInOrderTest {
 
     @Test
     void updateGoodInOrder() {
-
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             User user = EntityTestUtil.createUser("UserForGoodInOrder");
@@ -80,20 +75,19 @@ class GoodInOrderTest {
 
             GoodInOrder expectedGoodInOrder = EntityTestUtil.createGoodInOrder(good, order);
             session.save(expectedGoodInOrder);
-            Integer newQuantity = Integer.valueOf(1000000);
-            expectedGoodInOrder.setQuantity(newQuantity);
+            Integer expectedQuantity = Integer.valueOf(1000000);
+            expectedGoodInOrder.setQuantity(expectedQuantity);
             session.flush();
             session.clear();
 
             GoodInOrder actualGoodInOrder = session.get(GoodInOrder.class, expectedGoodInOrder.getId());
-            assertThat(actualGoodInOrder.getQuantity().equals(newQuantity));
+            assertThat(actualGoodInOrder.getQuantity()).isEqualTo(expectedQuantity);
             session.getTransaction().rollback();
         }
     }
 
     @Test
     void deleteGoodInOrder() {
-
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             User user = EntityTestUtil.createUser("UserForGoodInOrder");
@@ -110,16 +104,13 @@ class GoodInOrderTest {
             session.clear();
 
             GoodInOrder actualGoodInOrder = session.get(GoodInOrder.class, expectedGoodInOrder.getId());
-            Assertions.assertNull(actualGoodInOrder);
+            assertNull(actualGoodInOrder);
             session.getTransaction().rollback();
         }
     }
 
     @AfterAll
     static void afterTests() {
-        try {
-            sessionFactory.close();
-        } finally {
-        }
+        sessionFactory.close();
     }
 }

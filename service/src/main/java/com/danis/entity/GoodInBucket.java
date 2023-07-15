@@ -5,14 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,16 +21,16 @@ import java.time.LocalDateTime;
 @Entity
 @Builder
 @EqualsAndHashCode(exclude = "id")
-@Table(name = "goodinbucket")
+@ToString(exclude = "id")
 public class GoodInBucket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Good good;
     private Integer quantity;
     private Integer price;
-    private LocalDateTime creation_date ;
+    private LocalDateTime creation_date;
 }

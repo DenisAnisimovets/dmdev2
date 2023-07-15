@@ -5,23 +5,20 @@ import com.danis.util.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class GoodTest {
-    private static SessionFactory sessionFactory = null;
+    private static SessionFactory sessionFactory;
 
     @BeforeAll
     static void beforeTests() {
-        try {
-            sessionFactory = HibernateTestUtil.buildSessionFactory();
-        } finally {
-        }
+        sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
     @Test
@@ -44,7 +41,7 @@ class GoodTest {
             session.save(expectedGood);
             session.clear();
             Good actualGood = session.get(Good.class, expectedGood.getId());
-            assertThat(expectedGood.equals(actualGood));
+            assertThat(actualGood).isEqualTo(expectedGood);
             session.getTransaction().rollback();
         }
     }
@@ -53,15 +50,14 @@ class GoodTest {
     void updateGood() {
         try (Session session = sessionFactory.openSession();) {
             session.beginTransaction();
-            Good good = EntityTestUtil.createGood("Good for test");
-            session.save(good);
-            ;
+            Good expectedGood = EntityTestUtil.createGood("Good for test");
+            session.save(expectedGood);
 
-            good.setGoodName("Good after test");
+            expectedGood.setGoodName("Good after test");
             session.flush();
             session.clear();
 
-            Good actualGood = session.get(Good.class, good.getId());
+            Good actualGood = session.get(Good.class, expectedGood.getId());
             assertEquals("Good after test", actualGood.getGoodName());
             session.getTransaction().rollback();
         }
@@ -71,25 +67,22 @@ class GoodTest {
     void deleteGood() {
         try (Session session = sessionFactory.openSession();) {
             session.beginTransaction();
-            Good actualGood = EntityTestUtil.createGood("Good for test");
-            session.save(actualGood);
+            Good expectedGood = EntityTestUtil.createGood("Good for test");
+            session.save(expectedGood);
 
 
-            session.delete(actualGood);
+            session.delete(expectedGood);
             session.flush();
             session.clear();
 
-            Good expectedGood = session.get(Good.class, actualGood.getId());
-            Assertions.assertNull(expectedGood);
+            Good actualGood = session.get(Good.class, expectedGood.getId());
+            assertNull(actualGood);
             session.getTransaction().rollback();
         }
     }
 
     @AfterAll
     static void afterTests() {
-        try {
-            sessionFactory.close();
-        } finally {
-        }
+        sessionFactory.close();
     }
 }

@@ -5,9 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,13 +26,14 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "orders")
-@EqualsAndHashCode(exclude = "id")
+@EqualsAndHashCode(exclude = {"id", "goodsInOrder"})
+@ToString(exclude = {"id", "goodsInOrder"})
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime creation_date;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     private Long sum;
 

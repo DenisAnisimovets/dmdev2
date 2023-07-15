@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class UserTest {
-    private static SessionFactory sessionFactory = null;
+    private static SessionFactory sessionFactory;
 
     @BeforeAll
     static void beforeTests() {
@@ -45,7 +45,7 @@ class UserTest {
             session.save(expectedUser);
             session.clear();
             User actualUser = session.get(User.class, expectedUser.getId());
-            assertThat(expectedUser.equals(actualUser));
+            assertThat(actualUser).isEqualTo(expectedUser);
             session.getTransaction().rollback();
         }
     }
@@ -71,25 +71,21 @@ class UserTest {
     void deleteUser() {
         try (Session session = sessionFactory.openSession();) {
             session.beginTransaction();
-            User actualUser = EntityTestUtil.createUser("User for test");
-            session.save(actualUser);
+            User expectedUser = EntityTestUtil.createUser("User for test");
+            session.save(expectedUser);
 
-
-            session.delete(actualUser);
+            session.delete(expectedUser);
             session.flush();
             session.clear();
 
-            User expectedUser = session.get(User.class, actualUser.getId());
-            Assertions.assertNull(expectedUser);
+            User actualUser = session.get(User.class, expectedUser.getId());
+            Assertions.assertNull(actualUser);
             session.getTransaction().rollback();
         }
     }
 
     @AfterAll
     static void afterTests() {
-        try {
-            sessionFactory.close();
-        } finally {
-        }
+        sessionFactory.close();
     }
 }

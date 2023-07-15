@@ -5,22 +5,19 @@ import com.danis.util.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class OrderTest {
-    private static SessionFactory sessionFactory = null;
+    private static SessionFactory sessionFactory;
 
     @BeforeAll
     static void beforeTests() {
-        try {
-            sessionFactory = HibernateTestUtil.buildSessionFactory();
-            Session session = null;
-        } finally {
-        }
+        sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
     @Test
@@ -31,7 +28,7 @@ class OrderTest {
             session.save(user);
             Order order = EntityTestUtil.createOrder(user);
             session.save(order);
-            Assertions.assertNotNull(order.getId());
+            assertNotNull(order.getId());
             session.getTransaction().rollback();
         }
     }
@@ -48,7 +45,7 @@ class OrderTest {
             session.save(expectedOrder);
             session.clear();
             Order actualOrder = session.get(Order.class, expectedOrder.getId());
-            assertThat(expectedOrder.equals(actualOrder));
+            assertThat(actualOrder).isEqualTo(expectedOrder);
             session.getTransaction().rollback();
         }
     }
@@ -63,13 +60,13 @@ class OrderTest {
             Order expectedOrder = EntityTestUtil.createOrder(user);
 
             session.save(expectedOrder);
-            Long newSum = Long.valueOf(100000);
-            expectedOrder.setSum(newSum);
+            Long expectedSum = Long.valueOf(100000);
+            expectedOrder.setSum(expectedSum);
             session.flush();
             session.clear();
 
             Order actualOrder = session.get(Order.class, expectedOrder.getId());
-            assertThat(actualOrder.getSum().equals(newSum));
+            assertThat(actualOrder.getSum()).isEqualTo(expectedSum);
             session.getTransaction().rollback();
         }
     }
@@ -89,7 +86,7 @@ class OrderTest {
             session.flush();
             session.clear();
             Order actualOrder = session.get(Order.class, order.getId());
-            Assertions.assertNull(actualOrder);
+            assertNull(actualOrder);
             session.getTransaction().rollback();
         }
     }
@@ -109,16 +106,13 @@ class OrderTest {
             expectedOrder.getGoodsInOrder().add(goodInOrder);
             session.flush();
 
-            Assertions.assertNotNull(goodInOrder.getId());
+            assertNotNull(goodInOrder.getId());
             session.getTransaction().rollback();
         }
     }
 
     @AfterAll
     static void afterTests() {
-        try {
-            sessionFactory.close();
-        } finally {
-        }
+        sessionFactory.close();
     }
 }
