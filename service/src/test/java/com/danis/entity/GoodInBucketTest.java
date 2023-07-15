@@ -5,7 +5,9 @@ import com.danis.util.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,16 +16,27 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class GoodInBucketTest {
     private static SessionFactory sessionFactory;
+    private Session session;
 
     @BeforeAll
     static void beforeTests() {
         sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
+    @BeforeEach
+    void setUp() {
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+    }
+
+    @AfterEach
+    void tearDown() {
+        session.getTransaction().rollback();
+        session.close();
+    }
+
     @Test
     void insertGoodInOrder() {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
             User user = EntityTestUtil.createUser("UserForGoodInBucket");
             Good good = EntityTestUtil.createGood("GoodForGoodInOBucket");
             session.save(user);
@@ -33,14 +46,10 @@ class GoodInBucketTest {
             session.save(goodInBucket);
 
             assertNotNull(goodInBucket.getId());
-            session.getTransaction().rollback();
-        }
     }
 
     @Test
     void readGoodInOrder() {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
             User user = EntityTestUtil.createUser("UserForGoodInBucket");
             Good good = EntityTestUtil.createGood("GoodForGoodInBucket");
             session.save(user);
@@ -52,14 +61,10 @@ class GoodInBucketTest {
 
             GoodInBucket actualGoodInBucket = session.get(GoodInBucket.class, expectedGoodInBucket.getId());
             assertThat(actualGoodInBucket).isEqualTo(expectedGoodInBucket);
-            session.getTransaction().rollback();
-        }
     }
 
     @Test
     void updateGoodInOrder() {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
             User user = EntityTestUtil.createUser("UserForGoodInBucket");
             Good good = EntityTestUtil.createGood("GoodForGoodInBucket");
             session.save(user);
@@ -74,14 +79,10 @@ class GoodInBucketTest {
 
             GoodInBucket actualGoodInBucket = session.get(GoodInBucket.class, expectedGoodInBucket.getId());
             assertThat(actualGoodInBucket.getQuantity()).isEqualTo(expectedQuantity);
-            session.getTransaction().rollback();
-        }
     }
 
     @Test
     void deleteGoodInOrder() {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
             User user = EntityTestUtil.createUser("UserForGoodInBucket");
             Good good = EntityTestUtil.createGood("GoodForGoodInBucket");
             session.save(user);
@@ -95,8 +96,6 @@ class GoodInBucketTest {
 
             GoodInBucket actualGoodInBucket = session.get(GoodInBucket.class, expectedGoodInBucket.getId());
             assertNull(actualGoodInBucket);
-            session.getTransaction().rollback();
-        }
     }
 
     @AfterAll

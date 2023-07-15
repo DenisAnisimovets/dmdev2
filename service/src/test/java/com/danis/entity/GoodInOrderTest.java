@@ -5,7 +5,9 @@ import com.danis.util.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,99 +16,94 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class GoodInOrderTest {
     private static SessionFactory sessionFactory;
+    private Session session;
 
     @BeforeAll
     static void beforeTests() {
         sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
+    @BeforeEach
+    void setUp() {
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+    }
+
+    @AfterEach
+    void tearDown() {
+        session.getTransaction().rollback();
+        session.close();
+    }
+
     @Test
     void insertGoodInOrder() {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            User user = EntityTestUtil.createUser("UserForGoodInOrder");
-            Order order = EntityTestUtil.createOrder(user);
-            Good good = EntityTestUtil.createGood("GoodForGoodInOrder");
-            session.save(user);
-            session.save(order);
-            session.save(good);
-            GoodInOrder goodInOrder = EntityTestUtil.createGoodInOrder(good, order);
+        User user = EntityTestUtil.createUser("UserForGoodInOrder");
+        Order order = EntityTestUtil.createOrder(user);
+        Good good = EntityTestUtil.createGood("GoodForGoodInOrder");
+        session.save(user);
+        session.save(order);
+        session.save(good);
+        GoodInOrder goodInOrder = EntityTestUtil.createGoodInOrder(good, order);
 
-            session.save(goodInOrder);
+        session.save(goodInOrder);
 
-            assertNotNull(goodInOrder.getId());
-
-            session.getTransaction().rollback();
-        }
+        assertNotNull(goodInOrder.getId());
     }
 
     @Test
     void readGoodInOrder() {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            User user = EntityTestUtil.createUser("UserForGoodInOrder");
-            Order order = EntityTestUtil.createOrder(user);
-            Good good = EntityTestUtil.createGood("GoodForGoodInOrder");
-            session.save(user);
-            session.save(order);
-            session.save(good);
+        User user = EntityTestUtil.createUser("UserForGoodInOrder");
+        Order order = EntityTestUtil.createOrder(user);
+        Good good = EntityTestUtil.createGood("GoodForGoodInOrder");
+        session.save(user);
+        session.save(order);
+        session.save(good);
 
-            GoodInOrder expectedGoodInOrder = EntityTestUtil.createGoodInOrder(good, order);
-            session.save(expectedGoodInOrder);
-            session.clear();
+        GoodInOrder expectedGoodInOrder = EntityTestUtil.createGoodInOrder(good, order);
+        session.save(expectedGoodInOrder);
+        session.clear();
 
-            GoodInOrder actualGoodInOrder = session.get(GoodInOrder.class, expectedGoodInOrder.getId());
-            assertThat(actualGoodInOrder).isEqualTo(actualGoodInOrder);
-
-            session.getTransaction().rollback();
-        }
+        GoodInOrder actualGoodInOrder = session.get(GoodInOrder.class, expectedGoodInOrder.getId());
+        assertThat(actualGoodInOrder).isEqualTo(actualGoodInOrder);
     }
 
     @Test
     void updateGoodInOrder() {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            User user = EntityTestUtil.createUser("UserForGoodInOrder");
-            Order order = EntityTestUtil.createOrder(user);
-            Good good = EntityTestUtil.createGood("GoodForGoodInOrder");
-            session.save(user);
-            session.save(order);
-            session.save(good);
+        User user = EntityTestUtil.createUser("UserForGoodInOrder");
+        Order order = EntityTestUtil.createOrder(user);
+        Good good = EntityTestUtil.createGood("GoodForGoodInOrder");
+        session.save(user);
+        session.save(order);
+        session.save(good);
 
-            GoodInOrder expectedGoodInOrder = EntityTestUtil.createGoodInOrder(good, order);
-            session.save(expectedGoodInOrder);
-            Integer expectedQuantity = Integer.valueOf(1000000);
-            expectedGoodInOrder.setQuantity(expectedQuantity);
-            session.flush();
-            session.clear();
+        GoodInOrder expectedGoodInOrder = EntityTestUtil.createGoodInOrder(good, order);
+        session.save(expectedGoodInOrder);
+        Integer expectedQuantity = Integer.valueOf(1000000);
+        expectedGoodInOrder.setQuantity(expectedQuantity);
+        session.flush();
+        session.clear();
 
-            GoodInOrder actualGoodInOrder = session.get(GoodInOrder.class, expectedGoodInOrder.getId());
-            assertThat(actualGoodInOrder.getQuantity()).isEqualTo(expectedQuantity);
-            session.getTransaction().rollback();
-        }
+        GoodInOrder actualGoodInOrder = session.get(GoodInOrder.class, expectedGoodInOrder.getId());
+        assertThat(actualGoodInOrder.getQuantity()).isEqualTo(expectedQuantity);
     }
 
     @Test
     void deleteGoodInOrder() {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            User user = EntityTestUtil.createUser("UserForGoodInOrder");
-            Order order = EntityTestUtil.createOrder(user);
-            Good good = EntityTestUtil.createGood("GoodForGoodInOrder");
-            session.save(user);
-            session.save(order);
-            session.save(good);
+        User user = EntityTestUtil.createUser("UserForGoodInOrder");
+        Order order = EntityTestUtil.createOrder(user);
+        Good good = EntityTestUtil.createGood("GoodForGoodInOrder");
+        session.save(user);
+        session.save(order);
+        session.save(good);
 
-            GoodInOrder expectedGoodInOrder = EntityTestUtil.createGoodInOrder(good, order);
-            session.save(expectedGoodInOrder);
-            session.delete(expectedGoodInOrder);
-            session.flush();
-            session.clear();
+        GoodInOrder expectedGoodInOrder = EntityTestUtil.createGoodInOrder(good, order);
+        session.save(expectedGoodInOrder);
+        session.delete(expectedGoodInOrder);
+        session.flush();
+        session.clear();
 
-            GoodInOrder actualGoodInOrder = session.get(GoodInOrder.class, expectedGoodInOrder.getId());
-            assertNull(actualGoodInOrder);
-            session.getTransaction().rollback();
-        }
+        GoodInOrder actualGoodInOrder = session.get(GoodInOrder.class, expectedGoodInOrder.getId());
+        assertNull(actualGoodInOrder);
     }
 
     @AfterAll
