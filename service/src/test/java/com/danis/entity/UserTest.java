@@ -5,83 +5,80 @@ import com.danis.util.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class UserTest {
     private static SessionFactory sessionFactory;
+    private Session session;
+
+    @BeforeEach
+    void setUp() {
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+    }
+
+    @AfterEach
+    void tearDown() {
+        session.getTransaction().rollback();
+        session.close();
+    }
 
     @BeforeAll
     static void beforeTests() {
-        try {
-            sessionFactory = HibernateTestUtil.buildSessionFactory();
-        } finally {
-        }
+        sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
     @Test
     void InsertUser() {
-        try (Session session = sessionFactory.openSession();) {
-            User user = EntityTestUtil.createUser("User for test");
-            session.beginTransaction();
+        User user = EntityTestUtil.createUser("User for test");
 
-            session.save(user);
-            assertNotNull(user.getId());
-            session.getTransaction().rollback();
-        }
+        session.save(user);
+
+        assertNotNull(user.getId());
     }
 
     @Test
     void readUser() {
         User expectedUser = EntityTestUtil.createUser("User for test");
 
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.save(expectedUser);
-            session.clear();
-            User actualUser = session.get(User.class, expectedUser.getId());
-            assertThat(actualUser).isEqualTo(expectedUser);
-            session.getTransaction().rollback();
-        }
+        session.save(expectedUser);
+        session.clear();
+        User actualUser = session.get(User.class, expectedUser.getId());
+        assertThat(actualUser).isEqualTo(expectedUser);
     }
 
     @Test
     void updateUser() {
-        try (Session session = sessionFactory.openSession();) {
-            session.beginTransaction();
-            User user = EntityTestUtil.createUser("User for test");
-            session.save(user);
+        User user = EntityTestUtil.createUser("User for test");
+        session.save(user);
 
-            user.setUsername("User after test");
-            session.flush();
-            session.clear();
+        user.setUsername("User after test");
+        session.flush();
+        session.clear();
 
-            User actualUser = session.get(User.class, user.getId());
-            assertEquals("User after test", actualUser.getUsername());
-            session.getTransaction().rollback();
-        }
+        User actualUser = session.get(User.class, user.getId());
+        assertEquals("User after test", actualUser.getUsername());
     }
 
     @Test
     void deleteUser() {
-        try (Session session = sessionFactory.openSession();) {
-            session.beginTransaction();
-            User expectedUser = EntityTestUtil.createUser("User for test");
-            session.save(expectedUser);
+        User expectedUser = EntityTestUtil.createUser("User for test");
+        session.save(expectedUser);
 
-            session.delete(expectedUser);
-            session.flush();
-            session.clear();
+        session.delete(expectedUser);
+        session.flush();
+        session.clear();
 
-            User actualUser = session.get(User.class, expectedUser.getId());
-            Assertions.assertNull(actualUser);
-            session.getTransaction().rollback();
-        }
+        User actualUser = session.get(User.class, expectedUser.getId());
+        assertNull(actualUser);
     }
 
     @AfterAll
