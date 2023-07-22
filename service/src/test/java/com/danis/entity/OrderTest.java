@@ -139,7 +139,7 @@ class OrderTest {
         goodInOrderSubGraph.addAttributeNodes("good", "quantity", "price", "creation_date");
 
         Map<String, Object> properties = Map.of(
-                GraphSemantic.LOAD.getJpaHintName(), orderGraph
+                GraphSemantic.FETCH.getJpaHintName(), orderGraph
         );
         var actualOrder = session.find(Order.class, expectedOrder.getId(), properties);
         assertThat(actualOrder).isEqualTo(expectedOrder);
@@ -149,8 +149,8 @@ class OrderTest {
                         "select o from Order o", Order.class)
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), orderGraph)
                 .list();
-        orders.forEach(it -> System.out.println(it.getUser().getUsername()));
-        orders.forEach(it -> System.out.println(it.getGoodsInOrder().size()));
+//        orders.forEach(it -> System.out.println(it.getUser().getUsername()));
+//        orders.forEach(it -> System.out.println(it.getGoodsInOrder().size()));
     }
 
     @Test
@@ -178,15 +178,15 @@ class OrderTest {
         );
         var actualOrder = session.find(Order.class, expectedOrder.getId(), properties);
         assertThat(actualOrder).isEqualTo(expectedOrder);
-        System.out.println(actualOrder.getUser().getUsername());
-        System.out.println(actualOrder.getGoodsInOrder().size());
+//        System.out.println(actualOrder.getUser().getUsername());
+//        System.out.println(actualOrder.getGoodsInOrder().size());
 
         var orders = session.createQuery(
                         "select o from Order o", Order.class)
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), orderGraph)
                 .list();
-        orders.forEach(it -> System.out.println(it.getUser().getUsername()));
-        orders.forEach(it -> System.out.println(it.getGoodsInOrder().size()));
+//        orders.forEach(it -> System.out.println(it.getUser().getUsername()));
+//        orders.forEach(it -> System.out.println(it.getGoodsInOrder().size()));
     }
 
     @Test
@@ -206,15 +206,15 @@ class OrderTest {
         idList.add(expectedOrder.getId());
 
         OrderFilter orderFilter = OrderFilter.builder()
-                .minValue(99L)
-                .idList(idList).
+                .minSum(99L)
+                .ids(idList).
                 build();
 
         var predicate = QPredicate.builder()
-                .add(orderFilter.getMinValue(), order.sum::gt)
-                .add(orderFilter.getMaxValue(), order.sum::lt)
-                .add(orderFilter.getIdList(), order.id::in)
-                .add(orderFilter.getUserIdList(), order.user.id::in)
+                .add(orderFilter.getMinSum(), order.sum::gt)
+                .add(orderFilter.getMaxSum(), order.sum::lt)
+                .add(orderFilter.getIds(), order.id::in)
+                .add(orderFilter.getUserIds(), order.user.id::in)
                 .buildAnd();
 
         var orderList = new JPAQuery<Order>(session)

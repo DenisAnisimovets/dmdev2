@@ -8,8 +8,8 @@ import java.util.List;
 @Builder
 @Value
 public class OrderFilter {
-    List<Long> idList;
-    List<Long> userIdList;
-    Long minValue;
-    Long maxValue;
+    List<Long> ids;
+    List<Long> userIds;
+    Long minSum;
+    Long maxSum;
 }
