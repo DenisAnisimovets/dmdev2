@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(exclude = "id")
 @ToString(exclude = "id")
 @Entity
-public class GoodInOrder {
+public class GoodInOrder implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

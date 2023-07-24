@@ -28,7 +28,7 @@ import java.util.List;
 @Table(name = "orders")
 @EqualsAndHashCode(exclude = {"id", "goodsInOrder"})
 @ToString(exclude = {"id", "goodsInOrder"})
-public class Order {
+public class Order implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

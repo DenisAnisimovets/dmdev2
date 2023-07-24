@@ -19,7 +19,7 @@ import javax.persistence.Id;
 @Builder
 @EqualsAndHashCode(exclude = "id")
 @ToString(exclude = "id")
-public class Good {
+public class Good implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
