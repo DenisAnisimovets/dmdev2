@@ -20,7 +20,7 @@ class GoodRepositoryTest extends TestBase {
 
     @BeforeAll
     static void beforeAllTest() {
-        goodRepository = new GoodRepository(entityManager);
+        goodRepository = context.getBean(GoodRepository.class);
     }
 
     @Test
