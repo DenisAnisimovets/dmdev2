@@ -25,7 +25,7 @@ import java.time.LocalDate;
 @Table(name = "users")
 @EqualsAndHashCode(exclude = "id")
 @ToString(exclude = "id")
-public class User {
+public class User implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

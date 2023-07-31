@@ -28,7 +28,7 @@ import java.util.List;
 @Table(name = "orders")
 @EqualsAndHashCode(exclude = {"id", "goodsInOrder"})
 @ToString(exclude = {"id", "goodsInOrder"})
-public class Order {
+public class Orders implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,7 +38,7 @@ public class Order {
     private Long sum;
 
     @Builder.Default
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<GoodInOrder> goodsInOrder = new ArrayList<>();
 
 }

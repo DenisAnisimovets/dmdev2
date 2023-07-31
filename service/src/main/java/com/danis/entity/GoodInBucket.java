@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Builder
 @EqualsAndHashCode(exclude = "id")
 @ToString(exclude = "id")
-public class GoodInBucket {
+public class GoodInBucket implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

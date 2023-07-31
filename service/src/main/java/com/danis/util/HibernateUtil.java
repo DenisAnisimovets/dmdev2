@@ -3,7 +3,7 @@ package com.danis.util;
 import com.danis.entity.GoodInBucket;
 import com.danis.entity.Good;
 import com.danis.entity.GoodInOrder;
-import com.danis.entity.Order;
+import com.danis.entity.Orders;
 import com.danis.entity.User;
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
@@ -24,7 +24,7 @@ public class HibernateUtil {
         Configuration configuration = new Configuration();
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
         configuration.addAnnotatedClass(User.class);
-        configuration.addAnnotatedClass(Order.class);
+        configuration.addAnnotatedClass(Orders.class);
         configuration.addAnnotatedClass(Good.class);
         configuration.addAnnotatedClass(GoodInOrder.class);
         configuration.addAnnotatedClass(GoodInBucket.class);

@@ -3,7 +3,7 @@ package com.danis.util;
 import com.danis.entity.Good;
 import com.danis.entity.GoodInBucket;
 import com.danis.entity.GoodInOrder;
-import com.danis.entity.Order;
+import com.danis.entity.Orders;
 import com.danis.entity.Role;
 import com.danis.entity.User;
 import lombok.experimental.UtilityClass;
@@ -31,19 +31,19 @@ public class EntityTestUtil {
                 .build();
     }
 
-    public Order createOrder(User user) {
-        return Order.builder()
+    public Orders createOrder(User user) {
+        return Orders.builder()
                 .creation_date(LocalDateTime.of(2023, 1, 1, 15, 0, 0))
                 .user(user)
                 .sum(100L)
                 .build();
     }
 
-    public GoodInOrder createGoodInOrder(Good good, Order order) {
+    public GoodInOrder createGoodInOrder(Good good, Orders orders) {
         return GoodInOrder
                 .builder()
                 .good(good)
-                .order(order)
+                .orders(orders)
                 .price(good.getPrice())
                 .quantity(100)
                 .build();
