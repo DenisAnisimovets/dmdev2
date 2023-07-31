@@ -1,30 +1,46 @@
 package com.danis.dao;
 
-import com.danis.entity.Order;
-import com.danis.entity.Order_;
-import com.danis.entity.User;
+import com.danis.dto.OrderFilter;
+import com.danis.entity.Orders;
+import com.danis.entity.Orders_;
+import com.danis.entity.QGoodInOrder;
 import com.danis.entity.User_;
+import com.querydsl.jpa.impl.JPAQuery;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
-public class OrderRepository extends RepositoryBase<Long, Order> {
-    EntityManager entityManager;
-    Class<Order> clazz;
+import static com.danis.entity.QOrders.orders;
+
+public class OrderRepository extends RepositoryBase<Long, Orders> {
 
     public OrderRepository(EntityManager entityManager) {
-        super(Order.class, entityManager);
-        this.entityManager = entityManager;
-        clazz = Order.class;
+        super(Orders.class, entityManager);
     }
 
-    public List<Order> findByUserId(Long userId) {
-        var cb = entityManager.getCriteriaBuilder();
-        var criteria = cb.createQuery(clazz);
-        var orders = criteria.from(Order.class);
-        var users = orders.join(Order_.USER);
-        criteria.where(cb.equal(users.get(User_.ID), userId));
-        return entityManager.createQuery(criteria)
-                .getResultList();
+    public List<Orders> findByUserId(Long userId) {
+//        var cb = getEntityManager().getCriteriaBuilder();
+//        var criteria = cb.createQuery(getClazz());
+//        var orders = criteria.from(Orders.class);
+//        var users = orders.join(Orders_.USER);
+//        criteria.where(cb.equal(users.get(User_.ID), userId));
+//        return getEntityManager().createQuery(criteria)
+//                .getResultList();
+//    }
+
+        OrderFilter orderFilter = OrderFilter.builder()
+                .userIds(List.of(userId)).
+                build();
+
+        var predicate = QPredicate.builder()
+                .add(orderFilter.getUserIds(), orders.user.id::in)
+                .buildAnd();
+
+        return new JPAQuery<Orders>(getEntityManager())
+                .select(orders)
+                .from(orders)
+                .where(predicate)
+                .fetch();
+
     }
 }

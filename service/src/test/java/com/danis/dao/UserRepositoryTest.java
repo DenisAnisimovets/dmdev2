@@ -1,17 +1,11 @@
 package com.danis.dao;
 
-import com.danis.entity.Order;
 import com.danis.entity.User;
 import com.danis.util.EntityTestUtil;
-import com.danis.util.HibernateTestUtil;
-import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
+import com.danis.util.TestBase;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,26 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class UserRepositoryTest {
-    private static SessionFactory sessionFactory;
-    private static EntityManager entityManager;
+class UserRepositoryTest extends TestBase {
     private static UserRepository userRepository;
 
     @BeforeAll
-    static void beforeAll() {
-        sessionFactory = HibernateTestUtil.buildSessionFactory();
-        entityManager = HibernateTestUtil.buildSessionProxy(sessionFactory);
+    static void beforeAllTest() {
         userRepository = new UserRepository(entityManager);
-    }
-
-    @BeforeEach
-    void setUp() {
-        userRepository.getEntityManager().getTransaction().begin();
-    }
-
-    @AfterEach
-    void tearDown() {
-        userRepository.getEntityManager().getTransaction().rollback();
     }
 
     @Test
@@ -81,7 +61,7 @@ class UserRepositoryTest {
         User expectedUser = EntityTestUtil.createUser("User for test");
         userRepository.save(expectedUser);
 
-        userRepository.delete(expectedUser.getId());
+        userRepository.delete(expectedUser);
         userRepository.getEntityManager().flush();
         userRepository.getEntityManager().clear();
 
@@ -100,11 +80,5 @@ class UserRepositoryTest {
         assertThat(allUsers).hasSize(2);
         assertTrue(allUsers.contains(user1));
         assertTrue(allUsers.contains(user2));
-    }
-
-    @AfterAll
-    static void afterAll() {
-        entityManager.close();
-        sessionFactory.close();
     }
 }

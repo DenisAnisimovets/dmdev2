@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public abstract class RepositoryBase<K extends Serializable, E extends BaseEntity<K>> implements Repository<K, E> {
+    @Getter
     private final Class<E> clazz;
     @Getter
     private final EntityManager entityManager;
@@ -22,9 +23,11 @@ public abstract class RepositoryBase<K extends Serializable, E extends BaseEntit
     }
 
     @Override
-    public void delete(K id) {
-        entityManager.remove(entityManager.find(clazz, id));
-        entityManager.flush();
+    public void delete(E entity) {
+        if(entity.getId()!= null) {
+            entityManager.remove(entityManager.find(clazz, entity.getId()));
+            entityManager.flush();
+        }
     }
 
     @Override

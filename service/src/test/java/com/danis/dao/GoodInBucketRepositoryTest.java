@@ -4,14 +4,10 @@ import com.danis.entity.Good;
 import com.danis.entity.GoodInBucket;
 import com.danis.entity.User;
 import com.danis.util.EntityTestUtil;
-import com.danis.util.HibernateTestUtil;
-import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.AfterEach;
+import com.danis.util.TestBase;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,30 +15,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class GoodInBucketRepositoryTest {
-    private static SessionFactory sessionFactory;
-    private static EntityManager entityManager;
+class GoodInBucketRepositoryTest extends TestBase {
+
     private static UserRepository userRepository;
     private static GoodRepository goodRepository;
     private static GoodInBucketRepository goodInBucketRepository;
 
     @BeforeAll
-    static void beforeAll() {
-        sessionFactory = HibernateTestUtil.buildSessionFactory();
-        entityManager = HibernateTestUtil.buildSessionProxy(sessionFactory);
+    static void beforeAllTest() {
         userRepository = new UserRepository(entityManager);
         goodRepository = new GoodRepository(entityManager);
         goodInBucketRepository = new GoodInBucketRepository(entityManager);
-    }
-
-    @BeforeEach
-    void setUp() {
-        goodInBucketRepository.getEntityManager().getTransaction().begin();
-    }
-
-    @AfterEach
-    void tearDown() {
-        goodInBucketRepository.getEntityManager().getTransaction().rollback();
     }
 
     @Test
@@ -102,7 +85,7 @@ class GoodInBucketRepositoryTest {
 
         GoodInBucket expectedGoodInBucket = EntityTestUtil.createGoodInBucket(user, good);
         goodInBucketRepository.save(expectedGoodInBucket);
-        goodInBucketRepository.delete(expectedGoodInBucket.getId());
+        goodInBucketRepository.delete(expectedGoodInBucket);
         entityManager.flush();
         entityManager.clear();
 

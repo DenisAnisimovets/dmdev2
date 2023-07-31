@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Data
@@ -28,7 +27,7 @@ public class GoodInOrder implements BaseEntity<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Order order;
+    private Orders orders;
     @ManyToOne(fetch = FetchType.LAZY)
     private Good good;
     private Integer quantity;

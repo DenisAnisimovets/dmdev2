@@ -18,12 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.danis.entity.QOrder.order;
+import static com.danis.entity.QOrders.orders;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class OrderTest {
+class OrdersTest {
     private static SessionFactory sessionFactory;
     private Session session;
 
@@ -48,9 +48,9 @@ class OrderTest {
     void insertOrder() {
         User user = EntityTestUtil.createUser("UserForOrder");
         session.save(user);
-        Order order = EntityTestUtil.createOrder(user);
-        session.save(order);
-        assertNotNull(order.getId());
+        Orders orders = EntityTestUtil.createOrder(user);
+        session.save(orders);
+        assertNotNull(orders.getId());
     }
 
     @Test
@@ -58,12 +58,12 @@ class OrderTest {
         User user = EntityTestUtil.createUser("UserForOrder");
         session.save(user);
 
-        Order expectedOrder = EntityTestUtil.createOrder(user);
+        Orders expectedOrders = EntityTestUtil.createOrder(user);
 
-        session.save(expectedOrder);
+        session.save(expectedOrders);
         session.clear();
-        Order actualOrder = session.get(Order.class, expectedOrder.getId());
-        assertThat(actualOrder).isEqualTo(expectedOrder);
+        Orders actualOrders = session.get(Orders.class, expectedOrders.getId());
+        assertThat(actualOrders).isEqualTo(expectedOrders);
     }
 
     @Test
@@ -71,16 +71,16 @@ class OrderTest {
         User user = EntityTestUtil.createUser("UserForOrder");
         session.save(user);
 
-        Order expectedOrder = EntityTestUtil.createOrder(user);
+        Orders expectedOrders = EntityTestUtil.createOrder(user);
 
-        session.save(expectedOrder);
+        session.save(expectedOrders);
         Long expectedSum = Long.valueOf(100000);
-        expectedOrder.setSum(expectedSum);
+        expectedOrders.setSum(expectedSum);
         session.flush();
         session.clear();
 
-        Order actualOrder = session.get(Order.class, expectedOrder.getId());
-        assertThat(actualOrder.getSum()).isEqualTo(expectedSum);
+        Orders actualOrders = session.get(Orders.class, expectedOrders.getId());
+        assertThat(actualOrders.getSum()).isEqualTo(expectedSum);
     }
 
     @Test
@@ -88,28 +88,28 @@ class OrderTest {
         User user = EntityTestUtil.createUser("UserForOrder");
         session.save(user);
 
-        Order order = EntityTestUtil.createOrder(user);
+        Orders orders = EntityTestUtil.createOrder(user);
 
-        session.save(order);
+        session.save(orders);
 
-        session.delete(order);
+        session.delete(orders);
         session.flush();
         session.clear();
-        Order actualOrder = session.get(Order.class, order.getId());
-        assertNull(actualOrder);
+        Orders actualOrders = session.get(Orders.class, orders.getId());
+        assertNull(actualOrders);
     }
 
     @Test
     void addGoodInOrderByCascade() {
         User user = EntityTestUtil.createUser("UserForOrder");
         session.save(user);
-        Order expectedOrder = EntityTestUtil.createOrder(user);
-        session.save(expectedOrder);
+        Orders expectedOrders = EntityTestUtil.createOrder(user);
+        session.save(expectedOrders);
         Good good = EntityTestUtil.createGood("First good");
         session.save(good);
 
-        GoodInOrder goodInOrder = EntityTestUtil.createGoodInOrder(good, expectedOrder);
-        expectedOrder.getGoodsInOrder().add(goodInOrder);
+        GoodInOrder goodInOrder = EntityTestUtil.createGoodInOrder(good, expectedOrders);
+        expectedOrders.getGoodsInOrder().add(goodInOrder);
         session.flush();
 
         assertNotNull(goodInOrder.getId());
@@ -120,20 +120,20 @@ class OrderTest {
 
         User user = EntityTestUtil.createUser("UserForOrder");
         session.save(user);
-        Order expectedOrder = EntityTestUtil.createOrder(user);
-        session.save(expectedOrder);
+        Orders expectedOrders = EntityTestUtil.createOrder(user);
+        session.save(expectedOrders);
         Good good1 = EntityTestUtil.createGood("First good");
         session.save(good1);
         Good good2 = EntityTestUtil.createGood("Second good");
         session.save(good2);
-        GoodInOrder goodInOrder1 = EntityTestUtil.createGoodInOrder(good1, expectedOrder);
-        GoodInOrder goodInOrder2 = EntityTestUtil.createGoodInOrder(good2, expectedOrder);
-        expectedOrder.getGoodsInOrder().add(goodInOrder1);
-        expectedOrder.getGoodsInOrder().add(goodInOrder2);
+        GoodInOrder goodInOrder1 = EntityTestUtil.createGoodInOrder(good1, expectedOrders);
+        GoodInOrder goodInOrder2 = EntityTestUtil.createGoodInOrder(good2, expectedOrders);
+        expectedOrders.getGoodsInOrder().add(goodInOrder1);
+        expectedOrders.getGoodsInOrder().add(goodInOrder2);
         session.flush();
         session.clear();
 
-        var orderGraph = session.createEntityGraph(Order.class);
+        var orderGraph = session.createEntityGraph(Orders.class);
         orderGraph.addAttributeNodes("user", "goodsInOrder");
         var goodInOrderSubGraph = orderGraph.addSubgraph("goodsInOrder", GoodInOrder.class);
         goodInOrderSubGraph.addAttributeNodes("good", "quantity", "price", "creation_date");
@@ -141,12 +141,12 @@ class OrderTest {
         Map<String, Object> properties = Map.of(
                 GraphSemantic.FETCH.getJpaHintName(), orderGraph
         );
-        var actualOrder = session.find(Order.class, expectedOrder.getId(), properties);
-        assertThat(actualOrder).isEqualTo(expectedOrder);
+        var actualOrder = session.find(Orders.class, expectedOrders.getId(), properties);
+        assertThat(actualOrder).isEqualTo(expectedOrders);
         System.out.println(actualOrder.getUser().getUsername());
         System.out.println(actualOrder.getGoodsInOrder().size());
         var orders = session.createQuery(
-                        "select o from Order o", Order.class)
+                        "select o from Orders o", Orders.class)
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), orderGraph)
                 .list();
 //        orders.forEach(it -> System.out.println(it.getUser().getUsername()));
@@ -158,31 +158,31 @@ class OrderTest {
 
         User user = EntityTestUtil.createUser("UserForOrder");
         session.save(user);
-        Order expectedOrder = EntityTestUtil.createOrder(user);
-        session.save(expectedOrder);
+        Orders expectedOrders = EntityTestUtil.createOrder(user);
+        session.save(expectedOrders);
         Good good1 = EntityTestUtil.createGood("First good");
         session.save(good1);
         Good good2 = EntityTestUtil.createGood("Second good");
         session.save(good2);
-        GoodInOrder goodInOrder1 = EntityTestUtil.createGoodInOrder(good1, expectedOrder);
-        GoodInOrder goodInOrder2 = EntityTestUtil.createGoodInOrder(good2, expectedOrder);
-        expectedOrder.getGoodsInOrder().add(goodInOrder1);
-        expectedOrder.getGoodsInOrder().add(goodInOrder2);
+        GoodInOrder goodInOrder1 = EntityTestUtil.createGoodInOrder(good1, expectedOrders);
+        GoodInOrder goodInOrder2 = EntityTestUtil.createGoodInOrder(good2, expectedOrders);
+        expectedOrders.getGoodsInOrder().add(goodInOrder1);
+        expectedOrders.getGoodsInOrder().add(goodInOrder2);
         session.flush();
         session.clear();
 
-        var orderGraph = session.createEntityGraph(Order.class);
+        var orderGraph = session.createEntityGraph(Orders.class);
         orderGraph.addAttributeNodes("user");
         Map<String, Object> properties = Map.of(
                 GraphSemantic.LOAD.getJpaHintName(), orderGraph
         );
-        var actualOrder = session.find(Order.class, expectedOrder.getId(), properties);
-        assertThat(actualOrder).isEqualTo(expectedOrder);
+        var actualOrder = session.find(Orders.class, expectedOrders.getId(), properties);
+        assertThat(actualOrder).isEqualTo(expectedOrders);
 //        System.out.println(actualOrder.getUser().getUsername());
 //        System.out.println(actualOrder.getGoodsInOrder().size());
 
         var orders = session.createQuery(
-                        "select o from Order o", Order.class)
+                        "select o from Orders o", Orders.class)
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), orderGraph)
                 .list();
 //        orders.forEach(it -> System.out.println(it.getUser().getUsername()));
@@ -193,17 +193,17 @@ class OrderTest {
     void readOrdersByQueryDSL() {
         User user = EntityTestUtil.createUser("UserForOrder");
         session.save(user);
-        Order expectedOrder = EntityTestUtil.createOrder(user);
-        session.save(expectedOrder);
+        Orders expectedOrders = EntityTestUtil.createOrder(user);
+        session.save(expectedOrders);
         Good good = EntityTestUtil.createGood("First good");
         session.save(good);
-        GoodInOrder goodInOrder = EntityTestUtil.createGoodInOrder(good, expectedOrder);
-        expectedOrder.getGoodsInOrder().add(goodInOrder);
+        GoodInOrder goodInOrder = EntityTestUtil.createGoodInOrder(good, expectedOrders);
+        expectedOrders.getGoodsInOrder().add(goodInOrder);
         session.flush();
         session.clear();
 
         List<Long> idList = new ArrayList<>();
-        idList.add(expectedOrder.getId());
+        idList.add(expectedOrders.getId());
 
         OrderFilter orderFilter = OrderFilter.builder()
                 .minSum(99L)
@@ -211,21 +211,21 @@ class OrderTest {
                 build();
 
         var predicate = QPredicate.builder()
-                .add(orderFilter.getMinSum(), order.sum::gt)
-                .add(orderFilter.getMaxSum(), order.sum::lt)
-                .add(orderFilter.getIds(), order.id::in)
-                .add(orderFilter.getUserIds(), order.user.id::in)
+                .add(orderFilter.getMinSum(), orders.sum::gt)
+                .add(orderFilter.getMaxSum(), orders.sum::lt)
+                .add(orderFilter.getIds(), orders.id::in)
+                .add(orderFilter.getUserIds(), orders.user.id::in)
                 .buildAnd();
 
-        var orderList = new JPAQuery<Order>(session)
-                .select(order)
-                .from(order)
-                .join(order.goodsInOrder, QGoodInOrder.goodInOrder)
+        var orderList = new JPAQuery<Orders>(session)
+                .select(orders)
+                .from(orders)
+                .join(orders.goodsInOrder, QGoodInOrder.goodInOrder)
                 .where(predicate)
                 .fetch();
 
         assertThat(orderList.size()).isEqualTo(1);
-        assertThat(orderList.get(0)).isEqualTo(expectedOrder);
+        assertThat(orderList.get(0)).isEqualTo(expectedOrders);
     }
 
     @AfterAll
