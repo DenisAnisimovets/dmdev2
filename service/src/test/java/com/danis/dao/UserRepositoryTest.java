@@ -19,7 +19,7 @@ class UserRepositoryTest extends TestBase {
 
     @BeforeAll
     static void beforeAllTest() {
-        userRepository = new UserRepository(entityManager);
+        userRepository = context.getBean(UserRepository.class);
     }
 
     @Test

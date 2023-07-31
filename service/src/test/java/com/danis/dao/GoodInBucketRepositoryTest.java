@@ -23,9 +23,9 @@ class GoodInBucketRepositoryTest extends TestBase {
 
     @BeforeAll
     static void beforeAllTest() {
-        userRepository = new UserRepository(entityManager);
-        goodRepository = new GoodRepository(entityManager);
-        goodInBucketRepository = new GoodInBucketRepository(entityManager);
+        userRepository = context.getBean(UserRepository.class);
+        goodRepository = context.getBean(GoodRepository.class);
+        goodInBucketRepository = context.getBean(GoodInBucketRepository.class);
     }
 
     @Test

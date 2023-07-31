@@ -25,10 +25,10 @@ class GoodInOrdersRepositoryTest extends TestBase {
 
     @BeforeAll
     static void beforeAllTest() {
-        userRepository = new UserRepository(entityManager);
-        goodRepository = new GoodRepository(entityManager);
-        orderRepository = new OrderRepository(entityManager);
-        goodInOrderRepository = new GoodInOrderRepository(entityManager);
+        userRepository = context.getBean(UserRepository.class);
+        goodRepository = context.getBean(GoodRepository.class);
+        orderRepository = context.getBean(OrderRepository.class);
+        goodInOrderRepository = context.getBean(GoodInOrderRepository.class);
     }
 
     @Test

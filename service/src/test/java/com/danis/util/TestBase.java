@@ -1,21 +1,22 @@
 package com.danis.util;
 
-import org.hibernate.SessionFactory;
+import com.danis.config.ApplicationTestConfiguration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.persistence.EntityManager;
 
 public class TestBase {
-    public static SessionFactory sessionFactory;
-    public static EntityManager entityManager;
+    protected static EntityManager entityManager;
+    protected static AnnotationConfigApplicationContext context;
 
     @BeforeAll
     static void beforeAll() {
-        sessionFactory = HibernateTestUtil.buildSessionFactory();
-        entityManager = HibernateTestUtil.buildSessionProxy(sessionFactory);
+        context = new AnnotationConfigApplicationContext(ApplicationTestConfiguration.class);
+        entityManager = context.getBean(EntityManager.class);
     }
 
     @BeforeEach
@@ -30,7 +31,6 @@ public class TestBase {
 
     @AfterAll
     static void afterAll() {
-        entityManager.close();
-        sessionFactory.close();
+        context.close();
     }
 }

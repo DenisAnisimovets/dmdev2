@@ -2,16 +2,15 @@ package com.danis.dao;
 
 import com.danis.dto.OrderFilter;
 import com.danis.entity.Orders;
-import com.danis.entity.Orders_;
-import com.danis.entity.QGoodInOrder;
-import com.danis.entity.User_;
 import com.querydsl.jpa.impl.JPAQuery;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.danis.entity.QOrders.orders;
 
+@Repository
 public class OrderRepository extends RepositoryBase<Long, Orders> {
 
     public OrderRepository(EntityManager entityManager) {
