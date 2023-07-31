@@ -3,14 +3,14 @@ package com.danis.dao;
 import com.danis.dto.OrderFilter;
 import com.danis.entity.Orders;
 import com.querydsl.jpa.impl.JPAQuery;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.danis.entity.QOrders.orders;
 
-@Component
+@Repository
 public class OrderRepository extends RepositoryBase<Long, Orders> {
 
     public OrderRepository(EntityManager entityManager) {
