@@ -6,9 +6,14 @@ import com.danis.entity.Orders;
 import com.danis.entity.User;
 import com.danis.util.EntityTestUtil;
 import com.danis.util.TestBase;
-import org.junit.jupiter.api.BeforeAll;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,18 +22,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@RequiredArgsConstructor
 class OrdersRepositoryTest extends TestBase {
 
-    private static OrderRepository orderRepository;
-    private static UserRepository userRepository;
-    private static GoodRepository goodRepository;
-
-    @BeforeAll
-    static void beforeAllTest() {
-        orderRepository = context.getBean(OrderRepository.class);
-        userRepository = context.getBean(UserRepository.class);
-        goodRepository = context.getBean(GoodRepository.class);
-    }
+    private final EntityManager entityManager;
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final GoodRepository goodRepository;
 
     @Test
     void createOrder() {

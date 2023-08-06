@@ -6,9 +6,14 @@ import com.danis.entity.Orders;
 import com.danis.entity.User;
 import com.danis.util.EntityTestUtil;
 import com.danis.util.TestBase;
-import org.junit.jupiter.api.BeforeAll;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,20 +21,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@RequiredArgsConstructor
 class GoodInOrdersRepositoryTest extends TestBase {
 
-    private static UserRepository userRepository;
-    private static GoodRepository goodRepository;
-    private static GoodInOrderRepository goodInOrderRepository;
-    private static OrderRepository orderRepository;
-
-    @BeforeAll
-    static void beforeAllTest() {
-        userRepository = context.getBean(UserRepository.class);
-        goodRepository = context.getBean(GoodRepository.class);
-        orderRepository = context.getBean(OrderRepository.class);
-        goodInOrderRepository = context.getBean(GoodInOrderRepository.class);
-    }
+    private final EntityManager entityManager;
+    private final UserRepository userRepository;
+    private final GoodRepository goodRepository;
+    private final GoodInOrderRepository goodInOrderRepository;
+    private final OrderRepository orderRepository;
 
     @Test
     void createGoodInOrder() {
