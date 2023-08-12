@@ -13,7 +13,6 @@ public class TestBase {
 
     @DynamicPropertySource
     private static void SetProperties(DynamicPropertyRegistry registry) {
-        System.out.println();
         registry.add("spring.datasource.url", () -> TestUtil.postgres.getJdbcUrl());
         registry.add("spring.datasource.username", () -> TestUtil.postgres.getUsername());
         registry.add("spring.datasource.password", () -> TestUtil.postgres.getPassword());
