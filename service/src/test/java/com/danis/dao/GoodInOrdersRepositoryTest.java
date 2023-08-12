@@ -8,10 +8,6 @@ import com.danis.util.EntityTestUtil;
 import com.danis.util.TestBase;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;

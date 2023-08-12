@@ -1,15 +1,9 @@
 package com.danis.dao;
 
 import com.danis.entity.GoodInBucket;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.EntityManager;
 
-@Repository
-public class GoodInBucketRepository extends RepositoryBase<Long, GoodInBucket> {
-
-    public GoodInBucketRepository(EntityManager entityManager) {
-        super(GoodInBucket.class, entityManager);
-    }
+public interface GoodInBucketRepository extends JpaRepository<GoodInBucket, Long> {
 
 }

@@ -1,13 +1,9 @@
 package com.danis.dao;
 
 import com.danis.entity.User;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.EntityManager;
 
-@Repository
-public class UserRepository extends RepositoryBase<Long, User> {
-    public UserRepository(EntityManager entityManager) {
-        super(User.class, entityManager);
-    }
+public interface UserRepository extends JpaRepository<User, Long> {
+
 }

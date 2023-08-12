@@ -5,10 +5,6 @@ import com.danis.util.EntityTestUtil;
 import com.danis.util.TestBase;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -22,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RequiredArgsConstructor
 class UserRepositoryTest extends TestBase {
 
+    private final EntityManager entityManager;
     private final UserRepository userRepository;
 
     @Test
@@ -37,7 +34,7 @@ class UserRepositoryTest extends TestBase {
         User expectedUser = EntityTestUtil.createUser("User for test");
 
         userRepository.save(expectedUser);
-        userRepository.getEntityManager().clear();
+        entityManager.clear();
 
         Optional<User> actualUser = userRepository.findById(expectedUser.getId());
         assertTrue(actualUser.isPresent());
@@ -50,8 +47,8 @@ class UserRepositoryTest extends TestBase {
         userRepository.save(expectedUser);
 
         expectedUser.setUsername("User after test");
-        userRepository.getEntityManager().flush();
-        userRepository.getEntityManager().clear();
+        entityManager.flush();
+        entityManager.clear();
 
         Optional<User> actualUser = userRepository.findById(expectedUser.getId());
         assertTrue(actualUser.isPresent());
@@ -64,8 +61,8 @@ class UserRepositoryTest extends TestBase {
         userRepository.save(expectedUser);
 
         userRepository.delete(expectedUser);
-        userRepository.getEntityManager().flush();
-        userRepository.getEntityManager().clear();
+        entityManager.flush();
+        entityManager.clear();
 
         assertTrue(userRepository.findById(expectedUser.getId()).isEmpty());
     }

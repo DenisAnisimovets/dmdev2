@@ -5,10 +5,6 @@ import com.danis.util.EntityTestUtil;
 import com.danis.util.TestBase;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -22,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RequiredArgsConstructor
 class GoodRepositoryTest extends TestBase {
 
+    private final EntityManager entityManager;
     private final GoodRepository goodRepository;
 
     @Test
@@ -37,7 +34,7 @@ class GoodRepositoryTest extends TestBase {
         Good expectedGood = EntityTestUtil.createGood("Good for test");
 
         goodRepository.save(expectedGood);
-        goodRepository.getEntityManager().clear();
+        entityManager.clear();
 
         Optional<Good> actualGood = goodRepository.findById(expectedGood.getId());
         assertTrue(actualGood.isPresent());
@@ -50,8 +47,8 @@ class GoodRepositoryTest extends TestBase {
         goodRepository.save(expectedGood);
 
         expectedGood.setGoodName("Good after test");
-        goodRepository.getEntityManager().flush();
-        goodRepository.getEntityManager().clear();
+        entityManager.flush();
+        entityManager.clear();
 
         Optional<Good> actualGood = goodRepository.findById(expectedGood.getId());
         assertTrue(actualGood.isPresent());
@@ -64,8 +61,8 @@ class GoodRepositoryTest extends TestBase {
         goodRepository.save(expectedGood);
 
         goodRepository.delete(expectedGood);
-        goodRepository.getEntityManager().flush();
-        goodRepository.getEntityManager().clear();
+        entityManager.flush();
+        entityManager.clear();
 
         assertTrue(goodRepository.findById(expectedGood.getId()).isEmpty());
     }
