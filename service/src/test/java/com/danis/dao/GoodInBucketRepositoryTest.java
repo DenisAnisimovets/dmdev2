@@ -5,9 +5,10 @@ import com.danis.entity.GoodInBucket;
 import com.danis.entity.User;
 import com.danis.util.EntityTestUtil;
 import com.danis.util.TestBase;
-import org.junit.jupiter.api.BeforeAll;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,18 +16,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@RequiredArgsConstructor
 class GoodInBucketRepositoryTest extends TestBase {
 
-    private static UserRepository userRepository;
-    private static GoodRepository goodRepository;
-    private static GoodInBucketRepository goodInBucketRepository;
-
-    @BeforeAll
-    static void beforeAllTest() {
-        userRepository = context.getBean(UserRepository.class);
-        goodRepository = context.getBean(GoodRepository.class);
-        goodInBucketRepository = context.getBean(GoodInBucketRepository.class);
-    }
+    private final EntityManager entityManager;
+    private final UserRepository userRepository;
+    private final GoodRepository goodRepository;
+    private final GoodInBucketRepository goodInBucketRepository;
 
     @Test
     void createGoodInOrder() {

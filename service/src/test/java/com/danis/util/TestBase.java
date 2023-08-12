@@ -1,36 +1,20 @@
 package com.danis.util;
 
-import com.danis.config.ApplicationTestConfiguration;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-
+@ActiveProfiles("test")
+@SpringBootTest
+@Transactional
 public class TestBase {
-    protected static EntityManager entityManager;
-    protected static AnnotationConfigApplicationContext context;
 
-    @BeforeAll
-    static void beforeAll() {
-        context = new AnnotationConfigApplicationContext(ApplicationTestConfiguration.class);
-        entityManager = context.getBean(EntityManager.class);
-    }
-
-    @BeforeEach
-    void setUp() {
-        entityManager.getTransaction().begin();
-    }
-
-    @AfterEach
-    void tearDown() {
-        entityManager.getTransaction().rollback();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        context.close();
+    @DynamicPropertySource
+    private static void SetProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", () -> TestUtil.postgres.getJdbcUrl());
+        registry.add("spring.datasource.username", () -> TestUtil.postgres.getUsername());
+        registry.add("spring.datasource.password", () -> TestUtil.postgres.getPassword());
     }
 }

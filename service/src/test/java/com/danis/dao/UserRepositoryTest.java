@@ -3,9 +3,14 @@ package com.danis.dao;
 import com.danis.entity.User;
 import com.danis.util.EntityTestUtil;
 import com.danis.util.TestBase;
-import org.junit.jupiter.api.BeforeAll;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,13 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@RequiredArgsConstructor
 class UserRepositoryTest extends TestBase {
-    private static UserRepository userRepository;
 
-    @BeforeAll
-    static void beforeAllTest() {
-        userRepository = context.getBean(UserRepository.class);
-    }
+    private final UserRepository userRepository;
 
     @Test
     void createUser() {

@@ -1,8 +1,10 @@
 package com.danis;
 
-import com.danis.Common;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class App {
-    Common common = new Common();
+    public static void main(String[] args) {
 
+    }
 }
