@@ -1,4 +1,4 @@
-package com.danis.dao;
+package com.danis.repository;
 
 import com.danis.entity.GoodInOrder;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package com.danis.dao;
+package com.danis.repository;
 
 import com.danis.entity.User;
 import com.danis.util.EntityTestUtil;

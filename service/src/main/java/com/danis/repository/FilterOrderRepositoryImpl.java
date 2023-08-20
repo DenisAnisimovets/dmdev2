@@ -1,4 +1,4 @@
-package com.danis.dao;
+package com.danis.repository;
 
 import com.danis.dto.OrderFilter;
 import com.danis.entity.Orders;
@@ -17,14 +17,6 @@ public class FilterOrderRepositoryImpl implements FilterOrderRepository {
 
     @Override
     public List<Orders> findByUserId(Long userId) {
-//        var cb = getEntityManager().getCriteriaBuilder();
-//        var criteria = cb.createQuery(getClazz());
-//        var orders = criteria.from(Orders.class);
-//        var users = orders.join(Orders_.USER);
-//        criteria.where(cb.equal(users.get(User_.ID), userId));
-//        return getEntityManager().createQuery(criteria)
-//                .getResultList();
-//    }
 
         OrderFilter orderFilter = OrderFilter.builder()
                 .userIds(List.of(userId)).

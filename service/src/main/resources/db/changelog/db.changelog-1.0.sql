@@ -18,6 +18,7 @@ CREATE TABLE users
     birth_date DATE,
     role VARCHAR(32)
 );
+--rollback DROP IF EXISTS TABLE users;
 
 --changeset danis:3
 CREATE TABLE good
@@ -28,6 +29,7 @@ CREATE TABLE good
     quantity INTEGER,
     img VARCHAR(256)
 );
+--rollback DROP IF EXISTS TABLE good;
 
 --changeset danis:4
 CREATE TABLE orders
@@ -37,6 +39,7 @@ CREATE TABLE orders
     sum BIGINT ,
     creation_date TIMESTAMP
 );
+--rollback DROP IF EXISTS TABLE orders;
 
 --changeset danis:5
 CREATE TABLE good_in_order
@@ -49,6 +52,7 @@ CREATE TABLE good_in_order
     creation_date TIMESTAMP,
     UNIQUE (orders_Id, good_Id)
 );
+--rollback DROP IF EXISTS TABLE good_in_order;
 
 --changeset danis:6
 CREATE TABLE good_in_bucket
@@ -61,3 +65,4 @@ CREATE TABLE good_in_bucket
     creation_date TIMESTAMP,
     UNIQUE (user_id, good_Id)
 );
+--rollback DROP IF EXISTS TABLE good_in_bucket;

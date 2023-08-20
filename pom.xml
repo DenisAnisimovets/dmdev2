@@ -31,11 +31,6 @@
                 <version>1.18.3</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-core</artifactId>
-                <version>4.15.0</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
