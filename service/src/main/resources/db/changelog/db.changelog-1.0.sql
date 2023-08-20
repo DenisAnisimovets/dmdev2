@@ -1,10 +1,13 @@
+--liquibase formatted sql
+
+--changeset danis:1
 DROP TABLE IF EXISTS good_in_bucket;
 DROP TABLE IF EXISTS good_in_order;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS good;
 DROP TABLE IF EXISTS users;
 
-
+--changeset danis:2
 CREATE TABLE users
 (
     id bigserial PRIMARY KEY ,
@@ -15,7 +18,9 @@ CREATE TABLE users
     birth_date DATE,
     role VARCHAR(32)
 );
+--rollback DROP IF EXISTS TABLE users;
 
+--changeset danis:3
 CREATE TABLE good
 (
     id BIGSERIAL PRIMARY KEY ,
@@ -24,26 +29,32 @@ CREATE TABLE good
     quantity INTEGER,
     img VARCHAR(256)
 );
+--rollback DROP IF EXISTS TABLE good;
 
+--changeset danis:4
 CREATE TABLE orders
 (
     id BIGSERIAL PRIMARY KEY ,
     user_id BIGINT ,
-    sum INTEGER ,
+    sum BIGINT ,
     creation_date TIMESTAMP
 );
+--rollback DROP IF EXISTS TABLE orders;
 
+--changeset danis:5
 CREATE TABLE good_in_order
 (
     id BIGSERIAL PRIMARY KEY ,
-    order_id BIGINT REFERENCES orders(id) ,
+    orders_id BIGINT REFERENCES orders(id) ,
     good_id BIGINT REFERENCES good(id),
     quantity INTEGER ,
     price INTEGER ,
     creation_date TIMESTAMP,
-    UNIQUE (order_Id, good_Id)
+    UNIQUE (orders_Id, good_Id)
 );
+--rollback DROP IF EXISTS TABLE good_in_order;
 
+--changeset danis:6
 CREATE TABLE good_in_bucket
 (
     id BIGSERIAL PRIMARY KEY ,
@@ -54,3 +65,4 @@ CREATE TABLE good_in_bucket
     creation_date TIMESTAMP,
     UNIQUE (user_id, good_Id)
 );
+--rollback DROP IF EXISTS TABLE good_in_bucket;
