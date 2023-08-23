@@ -1,15 +1,15 @@
 package com.danis.mapper;
 
-import com.danis.dto.GoodReadDto;
+import com.danis.dto.GoodReadUpdateDto;
 import com.danis.entity.Good;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GoodReadMapper implements Mapper<Good, GoodReadDto> {
+public class GoodReadUpdateMapper implements Mapper<Good, GoodReadUpdateDto> {
 
     @Override
-    public GoodReadDto map(Good good) {
-        return new GoodReadDto(
+    public GoodReadUpdateDto map(Good good) {
+        return new GoodReadUpdateDto(
                 good.getId(),
                 good.getGoodName(),
                 good.getPrice(),

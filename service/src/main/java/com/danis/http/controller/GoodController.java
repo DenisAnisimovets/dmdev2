@@ -1,13 +1,8 @@
 package com.danis.http.controller;
 
-import com.danis.dto.GoodCreateEditDto;
-import com.danis.dto.GoodFilter;
-import com.danis.dto.GoodReadDto;
-import com.danis.dto.PageResponse;
+import com.danis.dto.GoodCreateDto;
 import com.danis.service.GoodService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,19 +34,20 @@ public class GoodController {
 //        return "good/goods";
 //    }
 
-    @GetMapping({"/{id}"})
+    @GetMapping("/{id}")
     public String findById(@PathVariable("id") Long id, Model model) {
-        return goodService.findById(id).map(goodReadDto -> {
+        return goodService.findById(id)
+                .map(goodReadDto -> {
             model.addAttribute("good", goodReadDto);
             return "good/good";
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/{id}/update")
-    public String update(@PathVariable("id") Long id, @ModelAttribute GoodCreateEditDto goodCreateEditDto) {
+    public String update(@PathVariable("id") Long id, @ModelAttribute GoodCreateDto goodCreateEditDto) {
         return goodService.update(id, goodCreateEditDto)
                 .map(it -> "redirect:/goods/{id}")
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
     }
 
@@ -64,7 +60,7 @@ public class GoodController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute GoodCreateEditDto good, RedirectAttributes redirectAttributes) {
+    public String create(@ModelAttribute GoodCreateDto good, RedirectAttributes redirectAttributes) {
         return "redirect:/goods/" + goodService.create(good).getId();
     }
 }

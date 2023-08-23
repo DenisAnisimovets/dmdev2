@@ -1,9 +1,13 @@
 package com.danis.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Value;
 
 @Value
-public class GoodCreateEditDto {
+@Builder
+@AllArgsConstructor
+public class GoodReadUpdateDto {
     Long id;
     String goodName;
     Integer price;

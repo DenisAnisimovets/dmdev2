@@ -1,9 +1,9 @@
 package com.danis.service;
 
-import com.danis.dto.GoodCreateEditDto;
-import com.danis.dto.GoodReadDto;
-import com.danis.mapper.GoodCreateEditMapper;
-import com.danis.mapper.GoodReadMapper;
+import com.danis.dto.GoodCreateDto;
+import com.danis.dto.GoodReadUpdateDto;
+import com.danis.mapper.GoodCreateMapper;
+import com.danis.mapper.GoodReadUpdateMapper;
 import com.danis.repository.GoodRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,13 @@ import static java.util.stream.Collectors.toList;
 public class GoodService {
 
     private final GoodRepository goodRepository;
-    private final GoodReadMapper goodReadMapper;
-    private final GoodCreateEditMapper goodCreateEditMapper;
+    private final GoodReadUpdateMapper goodReadUpdateMapper;
+    private final GoodCreateMapper goodCreateMapper;
 
-    public List<GoodReadDto> findAll() {
-        return goodRepository.findAll().stream()
-                .map(goodReadMapper::map).collect(toList());
+    public List<GoodReadUpdateDto> findAll() {
+        return goodRepository.findAll()
+                .stream()
+                .map(goodReadUpdateMapper::map).collect(toList());
     }
 
 //    public Page<GoodReadDto> findAll(GoodFilter filter, Pageable pageable) {
@@ -37,16 +38,17 @@ public class GoodService {
 //                .map(goodReadMapper::map);
 //    }
 
-    public Optional<GoodReadDto> findById(Long id) {
-        return goodRepository.findById(id).map(goodReadMapper::map);
+    public Optional<GoodReadUpdateDto> findById(Long id) {
+        return goodRepository.findById(id)
+                .map(goodReadUpdateMapper::map);
     }
 
     @Transactional
-    public Optional<GoodReadDto> update(Long id, GoodCreateEditDto goodCreateEditDto) {
+    public Optional<GoodReadUpdateDto> update(Long id, GoodCreateDto goodCreateEditDto) {
         return goodRepository.findById(id)
-                .map(entity -> goodCreateEditMapper.map(goodCreateEditDto, entity))
+                .map(entity -> goodCreateMapper.map(goodCreateEditDto, entity))
                 .map(goodRepository::saveAndFlush)
-                .map(goodReadMapper::map);
+                .map(goodReadUpdateMapper::map);
     }
 
     @Transactional
@@ -61,11 +63,11 @@ public class GoodService {
     }
 
     @Transactional
-    public GoodReadDto create(GoodCreateEditDto good) {
+    public GoodReadUpdateDto create(GoodCreateDto good) {
         return Optional.of(good)
-                .map(goodCreateEditMapper::map)
+                .map(goodCreateMapper::map)
                 .map(goodRepository::save)
-                .map(goodReadMapper::map)
+                .map(goodReadUpdateMapper::map)
                 .orElseThrow();
     }
 }

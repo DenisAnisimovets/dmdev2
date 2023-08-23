@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @RequiredArgsConstructor
-class GoodControllerTest extends TestBase {
+class GoodControllerIT extends TestBase {
 
     private final MockMvc mockMvc;
 

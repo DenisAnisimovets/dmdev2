@@ -8,4 +8,4 @@ INSERT INTO good (id, good_name, price, quantity) VALUES
     (5, 'Sugar', 17, 25);
 
 SELECT SETVAL('good_id_seq', (SELECT MAX(id) FROM good));
---rollback TRUNCATE TABLE good CASCADE;
+--rollback DELETE FROM good WHERE id in(1, 2, 3, 4, 5);

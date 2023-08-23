@@ -6,9 +6,7 @@
 </head>
 <body>
 <form th:action="@{/goods/{goodId}/update(goodId=${good.id})}" method="post" th:object="${good}">
-    <label for="id">Id:
-        <input id="id" type="number" name="id" th:value="*{id}">
-    </label><br>
+    <input id="id" type="hidden" name="id" th:value="*{id}">
     <label for="goodName">Goodname:
         <input id="goodName" type="text" name="goodName" th:value="*{goodName}">
     </label><br>

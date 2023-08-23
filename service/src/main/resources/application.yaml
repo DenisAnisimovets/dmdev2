@@ -4,3 +4,5 @@ spring:
     password: root
     username: postgres
     driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false

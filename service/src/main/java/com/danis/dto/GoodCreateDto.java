@@ -3,8 +3,7 @@ package com.danis.dto;
 import lombok.Value;
 
 @Value
-public class GoodReadDto {
-    Long id;
+public class GoodCreateDto {
     String goodName;
     Integer price;
     Integer quantity;
