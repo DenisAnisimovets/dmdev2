@@ -1,9 +1,9 @@
 package com.danis.service;
 
-import com.danis.dto.GoodReadUpdateDto;
+import com.danis.dto.GoodReadDto;
 import com.danis.entity.Good;
 import com.danis.mapper.GoodCreateMapper;
-import com.danis.mapper.GoodReadUpdateMapper;
+import com.danis.mapper.GoodReadMapper;
 import com.danis.repository.GoodRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class GoodServiceTest {
     private GoodRepository goodRepository;
 
     @Mock
-    private GoodReadUpdateMapper goodReadUpdateMapper;
+    private GoodReadMapper goodReadMapper;
 
     @Mock
     private GoodCreateMapper goodCreateMapper;
@@ -46,23 +46,23 @@ class GoodServiceTest {
                 .price(10)
                 .quantity(35)
                 .build();
-        GoodReadUpdateDto goodReadUpdateDto = GoodReadUpdateDto.builder()
+        GoodReadDto goodReadDto = GoodReadDto.builder()
                 .goodName("Good")
                 .price(10)
                 .quantity(35).build();
         when(goodRepository.findById(goodId)).thenReturn(Optional.of(good));
-        doReturn(goodReadUpdateDto).when(goodReadUpdateMapper).map(good);
+        doReturn(goodReadDto).when(goodReadMapper).map(good);
 
         // Act
-        Optional<GoodReadUpdateDto> maybeGoodReadDto = goodService.findById(goodId);
+        Optional<GoodReadDto> maybeGoodReadDto = goodService.findById(goodId);
 
         // Assert
         assertThat(maybeGoodReadDto.get());
-        GoodReadUpdateDto actualGoodReadUpdateDto = maybeGoodReadDto.get();
-        assertEquals(good.getId(), actualGoodReadUpdateDto.getId());
-        assertEquals(good.getGoodName(), actualGoodReadUpdateDto.getGoodName());
-        assertEquals(good.getPrice(), actualGoodReadUpdateDto.getPrice());
-        assertEquals(good.getQuantity(), actualGoodReadUpdateDto.getQuantity());
+        GoodReadDto actualGoodReadDto = maybeGoodReadDto.get();
+        assertEquals(good.getId(), actualGoodReadDto.getId());
+        assertEquals(good.getGoodName(), actualGoodReadDto.getGoodName());
+        assertEquals(good.getPrice(), actualGoodReadDto.getPrice());
+        assertEquals(good.getQuantity(), actualGoodReadDto.getQuantity());
 
         verify(goodRepository, times(1)).findById(goodId);
     }

@@ -8,7 +8,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Value
-public class GoodCreateDto {
+public class GoodUpdateDto {
+    Long id;
     @NotEmpty
     @Size(min = 3, max = 64)
     String goodName;

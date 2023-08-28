@@ -27,7 +27,7 @@ CREATE TABLE good
     good_name VARCHAR(128) unique ,
     price INTEGER,
     quantity INTEGER,
-    img VARCHAR(256)
+    image VARCHAR(256)
 );
 --rollback DROP IF EXISTS TABLE good;
 

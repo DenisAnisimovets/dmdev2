@@ -5,22 +5,10 @@
     <title>Title</title>
 </head>
 <body>
-<form th:action="@{/goods}" method="post" th:object="${good}">
-    <label for="goodName">Goodname:
-        <input id="goodName" type="text" name="goodName">
-    </label><br>
-    <label for="price">Price:
-        <input id="price" type="number" name="price">
-    </label><br>
-    <label for="quantity">Quantity:
-        <input id="quantity" type="number" name="quantity">
-    </label><br>
-    <label for="img">Img:
-        <input id="img" type="text" name="img">
-    </label><br>
+<form th:action="@{/goods/add}" method="get">
     <button type="submit">Add good</button>
 </form>
-<br><br>
+<br>
 <!--<form action="/goods">
     <div>
         <label for="page">Page:
