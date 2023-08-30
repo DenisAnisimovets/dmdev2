@@ -17,12 +17,8 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 @RequiredArgsConstructor
 public class ImageService {
 
-    @Value("${app.image.bucket:C:\\Java\\Projects\\dmdev2\\images}")
+    @Value("${app.image.bucket}")
     private final String bucket;
-
-    public String getBucket() {
-        return bucket;
-    }
 
     @SneakyThrows
     public void upload(String imagePath, InputStream content) {

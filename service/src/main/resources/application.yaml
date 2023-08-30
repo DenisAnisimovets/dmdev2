@@ -6,3 +6,6 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
+app:
+  image:
+    bucket: "C:\\Java\\Projects\\dmdev2\\images"

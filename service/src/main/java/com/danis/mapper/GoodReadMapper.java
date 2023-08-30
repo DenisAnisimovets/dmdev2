@@ -17,15 +17,4 @@ public class GoodReadMapper implements Mapper<Good, GoodReadDto> {
                 good.getImage()
         );
     }
-
-
-    public Good merge (GoodReadDto fromObject, Good toObject) {
-        return new Good(
-                fromObject.getId(),
-                fromObject.getGoodName(),
-                fromObject.getPrice(),
-                fromObject.getQuantity(),
-                fromObject.getImage()
-        );
-    }
 }

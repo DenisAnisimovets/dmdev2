@@ -16,5 +16,6 @@ public class TestBase {
         registry.add("spring.datasource.url", () -> TestUtil.postgres.getJdbcUrl());
         registry.add("spring.datasource.username", () -> TestUtil.postgres.getUsername());
         registry.add("spring.datasource.password", () -> TestUtil.postgres.getPassword());
+        registry.add("app.image.bucket", () -> System.getProperty("java.io.tmpdir"));
     }
 }

@@ -4,7 +4,6 @@ import com.danis.service.ImageService;
 import com.danis.util.TestBase;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -12,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,7 +32,7 @@ class GoodRestControllerIT extends TestBase {
         long goodId = 1L;
         byte[] avatarData = new byte[]{1};
         String path = "/api/v1/goods/" + goodId + "/avatar";
-        Mockito.doReturn(Optional.of(avatarData)).when(imageService).get(path);
+        doReturn(Optional.of(avatarData)).when(imageService).get(path);
 
         mockMvc.perform(get(path))
                 .andExpect(status().is2xxSuccessful())

@@ -83,7 +83,6 @@ public class GoodService {
     @Transactional
     public GoodReadDto create(GoodCreateDto goodCreateDto) {
         return Optional.of(goodCreateDto)
-                //.map(goodCreateMapper::map)
                 .map(it -> {
                     uploadImage(goodCreateDto.getImage());
                     return goodCreateMapper.map(goodCreateDto);})
