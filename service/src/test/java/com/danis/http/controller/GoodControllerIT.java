@@ -35,7 +35,7 @@ class GoodControllerIT extends TestBase {
                         .param("goodName", "Salt")
                         .param("price", String.valueOf(10))
                         .param("quantity", String.valueOf(100))
-                        .param("img", "")
+                        .param("image", "")
 
                 )
                 .andExpectAll(

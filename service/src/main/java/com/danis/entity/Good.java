@@ -26,5 +26,5 @@ public class Good implements BaseEntity<Long> {
     private String goodName;
     private Integer price;
     private Integer quantity;
-    private String img;
+    private String image;
 }
