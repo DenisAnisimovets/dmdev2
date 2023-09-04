@@ -2,7 +2,6 @@ package com.danis.http.controller;
 
 import com.danis.dto.GoodCreateDto;
 import com.danis.dto.GoodUpdateDto;
-import com.danis.entity.Good;
 import com.danis.service.GoodService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +22,7 @@ import javax.validation.Valid;
 @RequestMapping("/goods")
 @RequiredArgsConstructor
 public class GoodController {
+
     private final GoodService goodService;
 
     @GetMapping
@@ -32,10 +32,10 @@ public class GoodController {
     }
 
     @GetMapping("/add")
-    public String addGood(Model model) {
-        if(model.getAttribute("errors") == null) {
-            model.addAttribute("good", new Good());
-        }
+    public String addGood(Model model, @ModelAttribute("good") GoodCreateDto good) {
+//        if(model.getAttribute("errors") == null) {
+//            model.addAttribute("good", GoodCreateDto.builder().build());
+//        }
         return "good/addGood";
     }
 
@@ -49,15 +49,11 @@ public class GoodController {
 
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Long id, Model model) {
-        if(model.getAttribute("errors") != null) {
-            return "good/good";
-        } else {
-            return goodService.findById(id)
-                    .map(goodReadDto -> {
-                        model.addAttribute("good", goodReadDto);
-                        return "good/good";
-                    }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        }
+        return goodService.findById(id)
+                .map(goodReadDto -> {
+                    model.addAttribute("good", goodReadDto);
+                    return "good/good";
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
 

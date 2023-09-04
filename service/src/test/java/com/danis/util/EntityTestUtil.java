@@ -27,7 +27,7 @@ public class EntityTestUtil {
                 .firstname("Ivan")
                 .lastname("Ivanov")
                 .role(Role.ADMIN)
-                .birth_date(LocalDate.of(2001, 1, 1))
+                .birthDate(LocalDate.of(2001, 1, 1))
                 .build();
     }
 
