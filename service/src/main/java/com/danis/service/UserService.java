@@ -101,7 +101,7 @@ public class UserService implements UserDetailsService {
 
     public Optional<byte[]> findAvatar(Long id) {
         return userRepository.findById(id)
-                .map(user -> user.getImage())
+                .map(com.danis.entity.User::getImage)
                 .filter(StringUtils::hasText)
                 .flatMap(imageService::get);
     }

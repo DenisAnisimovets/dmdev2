@@ -31,6 +31,7 @@ public class UserController {
         model.addAttribute("users", userService.findAll());
         return "user/users";
     }
+
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Long id, Model model) {
         return userService.findById(id)

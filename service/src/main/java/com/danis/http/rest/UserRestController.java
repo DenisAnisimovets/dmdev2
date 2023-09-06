@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserRestController {
 
     private final UserService userService;
+
     @GetMapping(value = "/{id}/avatar", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public byte[] findAvatar(@PathVariable("id") Long id) {
         return userService.findAvatar(id)
