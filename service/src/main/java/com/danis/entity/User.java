@@ -35,8 +35,8 @@ public class User implements BaseEntity<Long> {
     private String password;
     private String firstname;
     private String lastname;
-    private LocalDate birth_date;
-
+    private LocalDate birthDate;
+    private String image;
     @Enumerated(EnumType.STRING)
     private Role role;
 }

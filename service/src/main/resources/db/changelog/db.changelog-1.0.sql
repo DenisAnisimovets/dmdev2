@@ -16,6 +16,7 @@ CREATE TABLE users
     firstname VARCHAR(128),
     lastname VARCHAR(128),
     birth_date DATE,
+    image VARCHAR(64),
     role VARCHAR(32)
 );
 --rollback DROP IF EXISTS TABLE users;

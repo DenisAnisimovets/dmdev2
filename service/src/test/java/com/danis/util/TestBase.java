@@ -1,6 +1,7 @@
 package com.danis.util;
 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
+@WithMockUser(username = "test@gmail.com", password = "test", authorities = "ADMIN")
 public class TestBase {
 
     @DynamicPropertySource
