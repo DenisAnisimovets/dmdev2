@@ -10,6 +10,7 @@ import com.danis.mapper.GoodUpdateMapper;
 import com.danis.repository.GoodRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -30,6 +31,8 @@ public class GoodService {
     private final GoodUpdateMapper goodUpdateMapper;
     private final GoodCreateMapper goodCreateMapper;
     private final ImageService imageService;
+    @Value("${app.image.bucket-for-goods}")
+    private final String bucket;
 
     public List<GoodReadDto> findAll() {
         return goodRepository.findAll()
@@ -55,17 +58,23 @@ public class GoodService {
     public Optional<GoodReadDto> update(Long id, GoodUpdateDto goodUpdateDto) {
         return goodRepository.findById(id)
                 .map(good -> {
-                    uploadImage(goodUpdateDto.getImage());
+                    //uploadImage(goodUpdateDto.getImage());
                     return goodUpdateMapper.map(goodUpdateDto, good);
                 })
                 .map(goodRepository::saveAndFlush)
-                .map(goodReadMapper::map);
+                .map(it -> {
+                            String pathToSave = bucket + it.getId();
+                            uploadImage(goodUpdateDto.getImage(), pathToSave);
+                            it.setImage(pathToSave);
+                            return goodReadMapper.map(it);
+                        }
+                );
     }
 
     @SneakyThrows
-    private void uploadImage(MultipartFile image) {
-        if (!image.isEmpty()) {
-            imageService.upload(image.getOriginalFilename(), image.getInputStream());
+    private void uploadImage(MultipartFile image, String pathToSave) {
+        if(!image.isEmpty()) {
+            imageService.upload(pathToSave, image.getInputStream());
         }
     }
 
@@ -83,11 +92,14 @@ public class GoodService {
     @Transactional
     public GoodReadDto create(GoodCreateDto goodCreateDto) {
         return Optional.of(goodCreateDto)
-                .map(it -> {
-                    uploadImage(goodCreateDto.getImage());
-                    return goodCreateMapper.map(goodCreateDto);})
+                .map(goodCreateMapper::map)
                 .map(goodRepository::save)
-                .map(goodReadMapper::map)
+                .map(it -> {
+                    String pathToSave = bucket + it.getId();
+                    uploadImage(goodCreateDto.getImage(), pathToSave);
+                    it.setImage(pathToSave);
+                    return goodReadMapper.map(it);
+                })
                 .orElseThrow();
     }
 

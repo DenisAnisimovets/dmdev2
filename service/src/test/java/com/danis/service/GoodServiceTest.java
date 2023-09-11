@@ -5,6 +5,7 @@ import com.danis.entity.Good;
 import com.danis.mapper.GoodCreateMapper;
 import com.danis.mapper.GoodReadMapper;
 import com.danis.repository.GoodRepository;
+import com.danis.util.EntityTestUtil;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,5 +67,46 @@ class GoodServiceTest {
         assertEquals(good.getQuantity(), actualGoodReadDto.getQuantity());
 
         verify(goodRepository, times(1)).findById(goodId);
+    }
+
+    @Test
+    public void finAll() {
+        // Arrange
+        Good good1 = EntityTestUtil.createGood("Good1");
+        GoodReadDto goodReadDto1 = EntityTestUtil.createGoodReadDto(good1);
+        Good good2 = EntityTestUtil.createGood("Good2");
+        GoodReadDto goodReadDto2 = EntityTestUtil.createGoodReadDto(good2);
+
+        when(goodRepository.findAll()).thenReturn(List.of(good1, good2));
+        doReturn(goodReadDto1).when(goodReadMapper).map(good1);
+        doReturn(goodReadDto2).when(goodReadMapper).map(good2);
+
+        // Act
+        List<GoodReadDto> allGoods = goodService.findAll();
+
+        // Assert
+        assertThat(allGoods).hasSize(2);
+        assertThat(allGoods).contains(goodReadDto1, goodReadDto2);
+
+        verify(goodRepository, times(1)).findAll();
+    }
+
+    @Test
+    public void delete() {
+        // Arrange
+        Good good = EntityTestUtil.createGood("Good");
+        GoodReadDto goodReadDto = EntityTestUtil.createGoodReadDto(good);
+
+        when(goodRepository.delete(good)).thenReturn();
+
+
+        // Act
+        boolean deletedGood  = goodService.delete(good.getId());
+
+        // Assert
+        assertThat(allGoods).hasSize(2);
+        assertThat(allGoods).contains(goodReadDto1, goodReadDto2);
+
+        verify(goodRepository, times(1)).findAll();
     }
 }
