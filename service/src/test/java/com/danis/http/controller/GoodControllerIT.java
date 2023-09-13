@@ -31,8 +31,8 @@ class GoodControllerIT extends TestBase {
     private final MockMvc mockMvc;
     @MockBean
     private final ImageService imageService;
-    long goodId = 1L;
-    long goodIdNotExisting = 10000000000L;
+    private static final long goodId = 1L;
+    private static final long goodIdNotExisting = 10000000000L;
 
     @Test
     void findAll() throws Exception {
@@ -104,7 +104,6 @@ class GoodControllerIT extends TestBase {
 
     @Test
     void delete() throws Exception {
-
         mockMvc.perform(MockMvcRequestBuilders.post("/goods/" + goodId + "/delete"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/goods")
@@ -113,7 +112,6 @@ class GoodControllerIT extends TestBase {
 
     @Test
     void deleteNotExisting() throws Exception {
-
         mockMvc.perform(MockMvcRequestBuilders.post("/goods/" + goodIdNotExisting + "/delete"))
                 .andExpect(status().is4xxClientError()
                 );

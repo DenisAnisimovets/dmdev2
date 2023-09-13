@@ -62,11 +62,12 @@ public class GoodService {
                     return goodUpdateMapper.map(goodUpdateDto, good);
                 })
                 .map(goodRepository::saveAndFlush)
-                .map(it -> {
-                            String pathToSave = bucket + it.getId();
+                .map(good -> {
+                            String pathToSave = bucket + good.getId();
                             uploadImage(goodUpdateDto.getImage(), pathToSave);
-                            it.setImage(pathToSave);
-                            return goodReadMapper.map(it);
+                            good.setImage(pathToSave);
+                            goodRepository.save(good);
+                            return goodReadMapper.map(good);
                         }
                 );
     }
@@ -94,11 +95,12 @@ public class GoodService {
         return Optional.of(goodCreateDto)
                 .map(goodCreateMapper::map)
                 .map(goodRepository::save)
-                .map(it -> {
-                    String pathToSave = bucket + it.getId();
+                .map(good -> {
+                    String pathToSave = bucket + good.getId();
                     uploadImage(goodCreateDto.getImage(), pathToSave);
-                    it.setImage(pathToSave);
-                    return goodReadMapper.map(it);
+                    good.setImage(pathToSave);
+                    goodRepository.save(good);
+                    return goodReadMapper.map(good);
                 })
                 .orElseThrow();
     }

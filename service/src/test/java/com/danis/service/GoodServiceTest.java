@@ -7,6 +7,7 @@ import com.danis.mapper.GoodReadMapper;
 import com.danis.repository.GoodRepository;
 import com.danis.util.EntityTestUtil;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,10 +40,11 @@ class GoodServiceTest {
     @Mock
     private GoodCreateMapper goodCreateMapper;
 
+    long goodId = 1L;
+
     @Test
-    public void findById() {
-        // Arrange
-        long goodId = 1L;
+    void findById() {
+        // Given
         Good good = Good.builder()
                 .goodName("Good")
                 .price(10)
@@ -55,10 +57,10 @@ class GoodServiceTest {
         when(goodRepository.findById(goodId)).thenReturn(Optional.of(good));
         doReturn(goodReadDto).when(goodReadMapper).map(good);
 
-        // Act
+        // When
         Optional<GoodReadDto> maybeGoodReadDto = goodService.findById(goodId);
 
-        // Assert
+        // Then
         assertThat(maybeGoodReadDto.get());
         GoodReadDto actualGoodReadDto = maybeGoodReadDto.get();
         assertEquals(good.getId(), actualGoodReadDto.getId());
@@ -70,8 +72,8 @@ class GoodServiceTest {
     }
 
     @Test
-    public void finAll() {
-        // Arrange
+    void findAll() {
+        // Given
         Good good1 = EntityTestUtil.createGood("Good1");
         GoodReadDto goodReadDto1 = EntityTestUtil.createGoodReadDto(good1);
         Good good2 = EntityTestUtil.createGood("Good2");
@@ -81,10 +83,10 @@ class GoodServiceTest {
         doReturn(goodReadDto1).when(goodReadMapper).map(good1);
         doReturn(goodReadDto2).when(goodReadMapper).map(good2);
 
-        // Act
+        // When
         List<GoodReadDto> allGoods = goodService.findAll();
 
-        // Assert
+        // Then
         assertThat(allGoods).hasSize(2);
         assertThat(allGoods).contains(goodReadDto1, goodReadDto2);
 
@@ -92,21 +94,19 @@ class GoodServiceTest {
     }
 
     @Test
-    public void delete() {
-        // Arrange
+    void delete() {
+        // Given
         Good good = EntityTestUtil.createGood("Good");
-        GoodReadDto goodReadDto = EntityTestUtil.createGoodReadDto(good);
+        good.setId(goodId);
 
-        when(goodRepository.delete(good)).thenReturn();
+        doReturn(Optional.of(good)).when(goodRepository).findById(good.getId());
 
-
-        // Act
+        // When
         boolean deletedGood  = goodService.delete(good.getId());
 
-        // Assert
-        assertThat(allGoods).hasSize(2);
-        assertThat(allGoods).contains(goodReadDto1, goodReadDto2);
-
-        verify(goodRepository, times(1)).findAll();
+        // Then
+        Assertions.assertTrue(deletedGood);
+        verify(goodRepository).delete(good);
+        verify(goodRepository).flush();
     }
 }
