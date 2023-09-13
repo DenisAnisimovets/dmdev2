@@ -7,7 +7,6 @@ import com.danis.mapper.GoodReadMapper;
 import com.danis.repository.GoodRepository;
 import com.danis.util.EntityTestUtil;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +18,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -105,7 +105,7 @@ class GoodServiceTest {
         boolean deletedGood  = goodService.delete(good.getId());
 
         // Then
-        Assertions.assertTrue(deletedGood);
+        assertTrue(deletedGood);
         verify(goodRepository).delete(good);
         verify(goodRepository).flush();
     }
