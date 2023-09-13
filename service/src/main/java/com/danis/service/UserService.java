@@ -9,11 +9,11 @@ import com.danis.mapper.UserUpdateMapper;
 import com.danis.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -35,7 +35,8 @@ public class UserService implements UserDetailsService {
     private final UserUpdateMapper userUpdateMapper;
     private final UserCreateMapper userCreateMapper;
     private final ImageService imageService;
-    private final PasswordEncoder passwordEncoder;
+    @Value("${app.image.bucket-for-users}")
+    private final String bucket;
 
     public List<UserReadDto> findAll() {
         return userRepository.findAll().stream()
@@ -72,30 +73,34 @@ public class UserService implements UserDetailsService {
     @Transactional
     public Optional<UserReadDto> update(Long id, UserUpdateDto userUpdateDto) {
         return userRepository.findById(id)
-                .map(user -> {
-                    uploadImage(userUpdateDto.getImage());
-                    return userUpdateMapper.map(userUpdateDto, user);
-                })
+                .map(user -> userUpdateMapper.map(userUpdateDto, user))
                 .map(userRepository::saveAndFlush)
-                .map(userReadMapper::map);
+                .map(it -> {
+                    String pathToSave = bucket + it.getId();
+                    uploadImage(userUpdateDto.getImage(), pathToSave);
+                    it.setImage(pathToSave);
+                    return userReadMapper.map(it);
+                });
     }
 
     @Transactional
     public UserReadDto create(UserCreateDto userDto) {
         return Optional.of(userDto)
-                .map(dto -> {
-                    uploadImage(dto.getImage());
-                    return userCreateMapper.map(dto);
-                })
+                .map(dto -> userCreateMapper.map(dto))
                 .map(userRepository::save)
-                .map(userReadMapper::map)
+                .map(it -> {
+                    String pathToSave = bucket + it.getId();
+                    uploadImage(userDto.getImage(), pathToSave);
+                    it.setImage(pathToSave);
+                    return userReadMapper.map(it);
+                })
                 .orElseThrow();
     }
 
     @SneakyThrows
-    private void uploadImage(MultipartFile image) {
-        if (!image.isEmpty()) {
-            imageService.upload(image.getOriginalFilename(), image.getInputStream());
+    private void uploadImage(MultipartFile image, String pathToSave) {
+        if(!image.isEmpty()) {
+            imageService.upload(pathToSave, image.getInputStream());
         }
     }
 

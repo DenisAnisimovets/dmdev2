@@ -9,6 +9,10 @@ spring:
   mvc:
     format:
       date: iso
+  messages:
+    basename: messages
 app:
   image:
     bucket: "C:\\Java\\Projects\\dmdev2\\images"
+    bucket-for-goods: "\\goods\\"
+    bucket-for-users: "\\users\\"
