@@ -1,5 +1,6 @@
 package com.danis.util;
 
+import com.danis.dto.GoodCreateDto;
 import com.danis.dto.GoodReadDto;
 import com.danis.entity.Good;
 import com.danis.entity.GoodInBucket;
@@ -24,6 +25,14 @@ public class EntityTestUtil {
 
     public GoodReadDto createGoodReadDto(Good good) {
         return GoodReadDto.builder()
+                .goodName(good.getGoodName())
+                .quantity(good.getQuantity())
+                .price(good.getPrice())
+                .build();
+    }
+
+    public GoodCreateDto createGoodCreateDto(Good good) {
+        return GoodCreateDto.builder()
                 .goodName(good.getGoodName())
                 .quantity(good.getQuantity())
                 .price(good.getPrice())
